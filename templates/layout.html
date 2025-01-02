@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Alien Emergency Fund{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block styles %}
+    <!-- Additional page-specific styles can go here -->
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Alien Loans Logo" height="50">
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('loan_form') }}">Home</a></li>
+                <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+                <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
+                <li><a href="{{ url_for('loan_calculator') }}">Loan Calculator</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        <!-- Dynamic content will be inserted here -->
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Alien Emergency Fund. All rights reserved.</p>
+    </footer>
+    {% block scripts %}
+    <!-- Additional page-specific scripts can go here -->
+    {% endblock %}
+</body>
+</html>

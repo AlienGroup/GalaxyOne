@@ -1,0 +1,199 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #000;
+}
+
+header {
+    background-color: #EFEFEF; /* Grey */
+    color: #FF8C00; /* Orange */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+header img {
+    margin-right: 10px;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+}
+
+header nav ul li {
+    display: inline;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #FF8C00; /* Orange */
+    font-weight: bold;
+}
+
+header nav ul li a:hover {
+    color: #e07c00; /* Darker Orange */
+}
+
+main {
+    padding: 20px;
+    margin-bottom: 60px; /* Adjust for fixed footer */
+}
+
+h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+h2 {
+    color: #FF8C00; /* Orange */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+}
+
+input, button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+input:focus, button:focus {
+    outline: none;
+    border-color: #FF8C00; /* Orange */
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+
+button {
+    background-color: #FF8C00; /* Orange */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #e07c00; /* Darker Orange */
+}
+
+.flash.success {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.flash.danger {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+footer {
+    background-color: #EFEFEF; /* Grey */
+    text-align: center;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #000;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Results Section Styling */
+.results {
+    background-color: #fff; /* White for clarity */
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.results h3.text-success {
+    color: #28a745; /* Green shade for success */
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.results p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Utility Classes */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.text-primary {
+    color: #FF8C00; /* Orange */
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.shadow-sm {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    form {
+        width: 90%;
+        padding: 15px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+<h2>Frequently Asked Questions</h2>
+<ul>
+    <li><strong>Q:</strong> How long does it take to process a loan application?<br>
+        <strong>A:</strong> Loan applications are reviewed within 48 hours.</li>
+    <li><strong>Q:</strong> What documents are required?<br>
+        <strong>A:</strong> 3 recent payslips, and 3 month bank statement, or proof of employment.</li>
+        <li><strong>Q:</strong> Repayment period?<br>
+        <strong>A:</strong> Up to 12 month.</li>
+        <li><strong>Q:</strong> Maximum amount to borrow?<br>
+        <strong>A:</strong> Up to R20 000.</li>
+</ul>
+<p>If you have any other questions, feel free to contact us via the <a href="{{ url_for('about_us') }}">about_us</a>.</p>
+{% endblock %}

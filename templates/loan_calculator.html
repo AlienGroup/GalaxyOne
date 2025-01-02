@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}Loan Calculator{% endblock %}
+
+{% block content %}
+<div class="container mt-5 p-4 border rounded bg-light shadow-sm">
+    <h2 class="text-center text-primary mb-4">Loan Calculator</h2>
+    <p class="text-center">Calculate your estimated loan repayment:</p>
+
+    <!-- Loan Calculator Form -->
+    <form action="/loan_calculator" method="POST" class="needs-validation" novalidate>
+        <div class="form-group">
+            <label for="loan_amount">Loan Amount (ZAR):</label>
+            <input type="number" id="loan_amount" name="loan_amount" class="form-control" placeholder="Enter loan amount" required>
+        </div>
+        <div class="form-group">
+            <label for="repayment_period">Repayment Period (Months):</label>
+            <input type="number" id="repayment_period" name="repayment_period" class="form-control" placeholder="Enter repayment months" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Calculate</button>
+    </form>
+
+    <!-- Display Results After Form Submission -->
+    {% if loan_amount and repayment_period %}
+    <div class="mt-4 p-4 bg-white border rounded shadow">
+        <h3 class="text-success text-center">Estimated Repayment</h3>
+        <p><strong>Total Loan Amount:</strong> R{{ '%.2f' % loan_amount }}</p>
+        <p><strong>Repayment Period:</strong> {{ repayment_period }} months</p>
+        <p><strong>Monthly Repayment:</strong> R{{ '%.2f' % monthly_repayment }}</p>
+        <p><strong>Estimated Total Repayment:</strong> R{{ '%.2f' % total_repayment }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
