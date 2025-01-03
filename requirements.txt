@@ -76,10 +76,14 @@ pure-eval==0.2.2
 pycparser==2.22
 Pygments==2.18.0
 pypiwin32==223
+PyQt5==5.15.11
+PyQt5-Qt5==5.15.2
+PyQt5_sip==12.16.1
 python-dateutil==2.9.0.post0
 python-json-logger==2.0.7
 pytz==2024.1
-pywinpty==2.0.13
+pywin32==306
+pywinpty==2.0.13; platform_system == "Windows"
 PyYAML==6.0.1
 pyzmq==26.0.3
 qtconsole==5.5.2
