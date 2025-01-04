@@ -10,9 +10,9 @@ app.secret_key = os.getenv("SECRET_KEY", "your_default_secret_key")  # Use envir
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')  # Use env variables
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'your_email_password')
-app.config['MAIL_DEFAULT_SENDER'] = ('Alien Emergency Fund', os.getenv('MAIL_DEFAULT_SENDER', 'your_email@gmail.com'))
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', 'alienemergencyfund@gmail.com')  # Use env variables
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'gnij yrdx ianb deaw')
+app.config['MAIL_DEFAULT_SENDER'] = ('Alien Emergency Fund', os.getenv('MAIL_DEFAULT_SENDER', 'alienemergencyfund@gmail.com'))
 mail = Mail(app)
 
 # Configure upload folder
