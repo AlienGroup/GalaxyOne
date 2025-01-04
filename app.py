@@ -3,7 +3,7 @@ from flask_mail import Mail, Message
 from whitenoise import WhiteNoise
 import os
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.secret_key = os.getenv("SECRET_KEY", "your_default_secret_key")  # Use environment variable
 
 # Configure Flask-Mail
