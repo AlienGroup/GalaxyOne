@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Alien Emergency Fund{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=1.0">
-    
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
     {% block styles %}
     <!-- Additional page-specific styles can go here -->
     {% endblock %}
