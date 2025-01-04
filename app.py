@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mail import Mail, Message
+from whitenoise import WhiteNoise
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = "your_secret_key"
 
 # Configure Flask-Mail
@@ -18,6 +19,9 @@ UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+# Enable WhiteNoise
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/')
 
 @app.route('/')
 def loan_form():
