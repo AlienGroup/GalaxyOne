@@ -4,17 +4,18 @@ from whitenoise import WhiteNoise
 import os
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = "your_secret_key"
+app.secret_key = os.getenv("SECRET_KEY", "your_default_secret_key")  # Use environment variable
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'alienemergencyfund@gmail.com'  # Replace with your email
-app.config['MAIL_PASSWORD'] = 'gnij yrdx ianb deaw'  # Replace with your email password
-app.config['MAIL_DEFAULT_SENDER'] = ('Alien Emergency Fund', 'alienemergencyfund@gmail.com')  # Replace with your sender name and email
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')  # Use env variables
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'your_email_password')
+app.config['MAIL_DEFAULT_SENDER'] = ('Alien Emergency Fund', os.getenv('MAIL_DEFAULT_SENDER', 'your_email@gmail.com'))
 mail = Mail(app)
 
+# Configure upload folder
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
@@ -105,11 +106,8 @@ def submit_loan():
 
         Thanks and Regards,
         Alien Emergency Fund
-        Elliotdale
-        5070
-        alienemergencyfund@gmail.com
         """
-        send_email("alienemergencyfund@gmail.com", lender_subject, lender_body)  # Replace with lender's email
+        send_email("alienemergencyfund@gmail.com", lender_subject, lender_body)
 
         # Success message
         flash("Emergency fund application submitted successfully!", "success")
@@ -160,11 +158,10 @@ def loan_calculator():
             repayment_period=repayment_period,
             monthly_repayment=monthly_repayment,
             total_repayment=total_repayment
-
         )
     else:
         # Render the form if the request is GET
         return render_template('loan_calculator.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)  # Set debug to False for production
