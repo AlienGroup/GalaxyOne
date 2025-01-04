@@ -25,10 +25,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/')
 
 @app.route('/')
-def home():
-    return render_template('your_html_file.html')
-
-@app.route('/')
 def loan_form():
     return render_template('loan_form.html')
 
