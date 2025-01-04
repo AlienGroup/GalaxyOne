@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Alien Emergency Fund{% endblock %}</title>
+    <!-- Link to the main stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     {% block styles %}
     <!-- Additional page-specific styles can go here -->
@@ -11,6 +12,7 @@
 </head>
 <body>
     <header>
+        <!-- Logo -->
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Alien Loans Logo" height="50">
         <nav>
             <ul>
@@ -23,6 +25,7 @@
         </nav>
     </header>
     <main class="container">
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
         <div class="flash-messages">
@@ -32,13 +35,15 @@
         </div>
         {% endif %}
         {% endwith %}
+        <!-- Dynamic Content Block -->
         {% block content %}
-        <!-- Dynamic content will be inserted here -->
+        <!-- Page-specific content will be inserted here -->
         {% endblock %}
     </main>
     <footer>
         <p>&copy; 2024 Alien Emergency Fund. All rights reserved.</p>
     </footer>
+    <!-- Page-Specific Scripts -->
     {% block scripts %}
     <!-- Additional page-specific scripts can go here -->
     {% endblock %}
