@@ -502,8 +502,21 @@ its behavior, see <a href="git-config.html">git-config(1)</a>.</p>
 <dt class="hdlist1">--http-backend-info-refs</dt>
 <dd>
 <p>Used by <a href="git-http-backend.html">git-http-backend(1)</a> to serve up
-<code>$GIT_URL/info/refs?service=git-receive-pack</code> requests. See
+<code>$GIT_URL/info/refs</code>?service=git-receive-pack requests. See
 <code>--http-backend-info-refs</code> in <a href="git-upload-pack.html">git-upload-pack(1)</a>.</p>
+</dd>
+<dt class="hdlist1">--skip-connectivity-check</dt>
+<dd>
+<p>Bypasses the connectivity checks that validate the existence of all
+objects in the transitive closure of reachable objects. This option is
+intended for server operators that want to implement their own object
+connectivity validation outside of Git. This is useful in such cases
+where the server-side knows additional information about how Git is
+being used and thus can rely on certain guarantees to more efficiently
+compute object connectivity that Git itself cannot make. Usage of this
+option without a reliable external mechanism to ensure full reachable
+object connectivity risks corrupting the repository and should not be
+used in the general case.</p>
 </dd>
 </dl>
 </div>
@@ -552,7 +565,7 @@ signed the push certificate.</p>
 <dt class="hdlist1"><code>GIT_PUSH_CERT_STATUS</code></dt>
 <dd>
 <p>The status of GPG verification of the push certificate,
-using the same mnemonic as used in <code>%G?</code> format of <code>git log</code>
+using the same mnemonic as used in <code>%G</code>? format of <code>git</code> <code>log</code>
 family of commands (see <a href="git-log.html">git-log(1)</a>).</p>
 </dd>
 <dt class="hdlist1"><code>GIT_PUSH_CERT_NONCE</code></dt>
@@ -742,7 +755,7 @@ left for <em>git-receive-pack</em> to do at that point is to exit itself
 anyway.</p>
 </div>
 <div class="paragraph">
-<p>This hook can be used, for example, to run <code>git update-server-info</code>
+<p>This hook can be used, for example, to run <code>git</code> <code>update-server-info</code>
 if the repository is packed and is served via a dumb transport.</p>
 </div>
 <div class="listingblock">
@@ -809,7 +822,7 @@ from within <code>pre-receive</code> are automatically rejected.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

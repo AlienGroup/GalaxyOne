@@ -7,7 +7,7 @@ Git - Perl interface to the Git version control system
 
 package Git;
 
-use 5.008001;
+require v5.26;
 use strict;
 use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 
@@ -1061,6 +1061,19 @@ sub _close_cat_blob {
 	delete @$self{@vars};
 }
 
+# Given PORT, a port number or service name, return its numerical
+# value else undef.
+sub port_num {
+    my ($port) = @_;
+
+    # Port can be either a positive integer within the 16-bit range...
+    if ($port =~ /^\d+$/ && $port > 0 && $port <= (2**16 - 1)) {
+        return $port;
+    }
+
+    # ... or a symbolic port (service name).
+    return scalar getservbyname($port, '');
+}
 
 =item credential_read( FILEHANDLE )
 

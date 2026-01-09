@@ -437,9 +437,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article">
 <div id="header">
 <h1>Git hash function transition</h1>
-<div class="details">
-<span id="revdate">2018-06-07</span>
-</div>
 </div>
 <div id="content">
 <div class="sect1">
@@ -699,8 +696,8 @@ aware of the hash function the client is using.</p>
 <h3 id="_repository_format_extension">Repository format extension</h3>
 <div class="paragraph">
 <p>A SHA-256 repository uses repository format version <code>1</code> (see
-Documentation/technical/repository-version.txt) with extensions
-<code>objectFormat</code> and <code>compatObjectFormat</code>:</p>
+<a href="../gitrepository-layout.html">gitrepository-layout(5)</a>) with <code>extensions.objectFormat</code> and
+<code>extensions.compatObjectFormat</code> (see <a href="../git-config.html">git-config(1)</a>) set to:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -821,14 +818,14 @@ shortest possible length needed to make names in the shortened
 object name table unambiguous.</p>
 </li>
 <li>
-<p>4-byte integer, recording where tables relating to this format
+<p>8-byte integer, recording where tables relating to this format
 are stored in this index file, as an offset from the beginning.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>4-byte offset to the trailer from the beginning of this file.</p>
+<p>8-byte offset to the trailer from the beginning of this file.</p>
 </li>
 <li>
 <p>Zero or more additional key/value pairs (4-byte key, 4-byte
@@ -875,12 +872,10 @@ compressed data to be copied directly from pack to pack during
 repacking without undetected data corruption.</p>
 </li>
 <li>
-<p>A table of 4-byte offset values. For an object in the table of
-sorted shortened object names, the value at the corresponding
-index in this table indicates where that object can be found in
-the pack file. These are usually 31-bit pack file offsets, but
-large offsets are encoded as an index into the next table with the
-most significant bit set.</p>
+<p>A table of 4-byte offset values. The index of this table in pack order
+indicates where that object can be found in the pack file. These are
+usually 31-bit pack file offsets, but large offsets are encoded as
+an index into the next table with the most significant bit set.</p>
 </li>
 <li>
 <p>A table of 8-byte offset entries (empty for pack files less than
@@ -906,16 +901,21 @@ up to and not including the table of CRC32 values.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A copy of the 20-byte SHA-256 checksum at the end of the
+<p>A copy of the full main hash checksum at the end of the
 corresponding packfile.</p>
 </li>
 <li>
-<p>20-byte SHA-256 checksum of all of the above.</p>
+<p>Full main hash checksum of all of the above.</p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The "full main hash" is a full-length hash of the main (not compatibility)
+algorithm in the repository.  Thus, if the main algorithm is SHA-256, this is
+a 32-byte SHA-256 hash and for SHA-1, it&#8217;s a 20-byte SHA-1 hash.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1106,7 +1106,7 @@ inflated again in step 3, for a total of two inflations.</p>
 <div class="paragraph">
 <p>Step 4 is probably necessary for good read-time performance. "git
 pack-objects" on the server optimizes the pack file for good data
-locality (see Documentation/technical/pack-heuristics.txt).</p>
+locality (see Documentation/technical/pack-heuristics.adoc).</p>
 </div>
 <div class="paragraph">
 <p>Details of this process are likely to change. It will take some
@@ -1157,27 +1157,21 @@ ordinary unsigned commit.</p>
 <div class="sect2">
 <h3 id="_signed_tags">Signed Tags</h3>
 <div class="paragraph">
-<p>We add a new field "gpgsig-sha256" to the tag object format to allow
-signing tags without relying on SHA-1. Its signed payload is the
-SHA-256 content of the tag with its gpgsig-sha256 field and "-----BEGIN PGP
-SIGNATURE-----" delimited in-body signature removed.</p>
+<p>We add new fields "gpgsig" and "gpgsig-sha256" to the tag object format to
+allow signing tags in both formats.  The in-body signature is used for the
+signature in the current hash algorithm and the header is used for the
+signature in the other algorithm.  Thus, a dual-signature tag will contain both
+an in-body signature and a gpgsig-sha256 header for the SHA-1 format of an
+object or both an in-body signature and a gpgsig header for the SHA-256 format
+of and object.</p>
 </div>
 <div class="paragraph">
-<p>This means tags can be signed</p>
+<p>The signed payload of the tag is the content of the tag in the current
+algorithm with both its gpgsig and gpgsig-sha256 fields and
+"-----BEGIN PGP SIGNATURE-----" delimited in-body signature removed.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>using SHA-1 only, as in existing signed tag objects</p>
-</li>
-<li>
-<p>using both SHA-1 and SHA-256, by using gpgsig-sha256 and an in-body
-signature.</p>
-</li>
-<li>
-<p>using only SHA-256, by only using the gpgsig-sha256 field.</p>
-</li>
-</ol>
+<div class="paragraph">
+<p>This means tags can be signed using one or both algorithms.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1808,7 +1802,7 @@ would now be superfluous to the commit log</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

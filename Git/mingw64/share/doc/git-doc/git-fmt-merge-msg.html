@@ -489,7 +489,8 @@ configuration variable.</p>
 <p>Do not list one-line descriptions from the actual commits being
 merged.</p>
 </dd>
-<dt class="hdlist1">--[no-]summary</dt>
+<dt class="hdlist1">--summary</dt>
+<dt class="hdlist1">--no-summary</dt>
 <dd>
 <p>Synonyms to --log and --no-log; these are deprecated and will be
 removed in the future.</p>
@@ -502,7 +503,7 @@ of the log message.  For use with <code>--log</code>.</p>
 </dd>
 <dt class="hdlist1">--into-name &lt;branch&gt;</dt>
 <dd>
-<p>Prepare the merge message as if merging to the branch <code>&lt;branch&gt;</code>,
+<p>Prepare the merge message as if merging to the branch <em>&lt;branch&gt;</em>,
 instead of the name of the real branch to which the merge is made.</p>
 </dd>
 <dt class="hdlist1">-F &lt;file&gt;</dt>
@@ -520,25 +521,25 @@ stdin.</p>
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1">merge.branchdesc</dt>
+<dt class="hdlist1"><code>merge.branchdesc</code></dt>
 <dd>
 <p>In addition to branch names, populate the log message with
 the branch description text associated with them.  Defaults
 to false.</p>
 </dd>
-<dt class="hdlist1">merge.log</dt>
+<dt class="hdlist1"><code>merge.log</code></dt>
 <dd>
 <p>In addition to branch names, populate the log message with at
 most the specified number of one-line descriptions from the
 actual commits that are being merged.  Defaults to false, and
 true is a synonym for 20.</p>
 </dd>
-<dt class="hdlist1">merge.suppressDest</dt>
+<dt class="hdlist1"><code>merge.suppressDest</code></dt>
 <dd>
 <p>By adding a glob that matches the names of integration
 branches to this multi-valued configuration variable, the
 default merge message computed for merges into these
-integration branches will omit "into &lt;branch name&gt;" from
+integration branches will omit "into <em>&lt;branch-name&gt;</em>" from
 its title.</p>
 <div class="paragraph">
 <p>An element with an empty value can be used to clear the list
@@ -590,7 +591,7 @@ the "origin" remote.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

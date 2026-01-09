@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block title %}Application {{ application.id }} - Admin - Alien Emergency Fund{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-primary mb-4">Application #{{ application.id }}</h2>
+    
+    <div class="row">
+        <!-- Personal Information -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="section-heading"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                    <p><strong>Full Name:</strong> {{ application.full_name if application.full_name else application.first_name + ' ' + application.last_name }}</p>
+                    <p><strong>ID Number:</strong> {{ application.id_number }}</p>
+                    <p><strong>Email:</strong> {{ application.email }}</p>
+                    <p><strong>Phone:</strong> {{ application.phone }}</p>
+                    
+                    <h5 class="section-heading mt-4">Address</h5>
+                    <div class="address-details ms-3">
+                        {% if application.address_line1 %}
+                            <p class="mb-1">{{ application.address_line1 }}</p>
+                            {% if application.address_line2 %}<p class="mb-1">{{ application.address_line2 }}</p>{% endif %}
+                            <p class="mb-1">
+                                {% if application.suburb %}{{ application.suburb }}{% endif %}
+                                {% if application.city %}, {{ application.city }}{% endif %}
+                                {% if application.postal_code %}, {{ application.postal_code }}{% endif %}
+                            </p>
+                            {% if application.country %}<p class="mb-0">{{ application.country }}</p>{% endif %}
+                        {% else %}
+                            <p class="text-muted">{{ application.address if application.address else 'Not provided' }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employment & Loan Details -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="section-heading"><i class="fas fa-briefcase me-2"></i>Employment Information</h5>
+                    <p><strong>Employer:</strong> {{ application.employer }}</p>
+                    <p><strong>Employer Contact:</strong> {{ application.employer_contact if application.employer_contact else 'Not provided' }}</p>
+                    <p><strong>Monthly Income:</strong> R{{ '%.2f' % application.monthly_income }}</p>
+                    <p><strong>Employment Duration:</strong> {{ application.employment_duration if application.employment_duration else 'Not provided' }}</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="section-heading"><i class="fas fa-money-bill-wave me-2"></i>Loan Details</h5>
+                    <p><strong>Loan Amount:</strong> R{{ '%.2f' % application.loan_amount }}</p>
+                    <p><strong>Loan Term:</strong> {{ application.loan_term }} months</p>
+                    <p><strong>Purpose:</strong> {{ application.purpose if application.purpose else 'N/A' }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge 
+                            {% if application.status == 'Pending' %}bg-warning text-dark
+                            {% elif application.status == 'Approved' %}bg-success
+                            {% elif application.status == 'Signed' %}bg-primary
+                            {% elif application.status == 'Declined' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {{ application.status }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Timeline -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="section-heading"><i class="fas fa-history me-2"></i>Application Timeline</h5>
+            <p><strong>Date Submitted:</strong> {{ application.date_submitted.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% if application.date_approved %}
+                <p><strong>Date Approved:</strong> {{ application.date_approved.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+            {% if application.date_declined %}
+                <p><strong>Date Declined:</strong> {{ application.date_declined.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+            {% if application.date_signed %}
+                <p><strong>Date Signed:</strong> {{ application.date_signed.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- DOCUMENTS SECTION - UPDATED FOR MULTIPLE FILES -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="section-heading"><i class="fas fa-file-alt me-2"></i>Application Documents</h5>
+            <div class="row">
+                <!-- ID Document -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="section-heading">ID Document</h5>
+                    {% if application.id_document_path %}
+                        <div class="document-item">
+                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                            <a href="{{ url_for('main.uploaded_file', filename=application.id_document_path.split('uploads/')[-1]) }}" 
+                               target="_blank" class="text-decoration-none">
+                                View ID Document
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No ID document uploaded</p>
+                    {% endif %}
+                </div>
+
+                <!-- Proof of Address -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="section-heading">Proof of Address</h5>
+                    {% if application.proof_address_path %}
+                        <div class="document-item">
+                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                            <a href="{{ url_for('main.uploaded_file', filename=application.proof_address_path.split('uploads/')[-1]) }}" 
+                               target="_blank" class="text-decoration-none">
+                                View Proof of Address
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No proof of address uploaded</p>
+                    {% endif %}
+                </div>
+
+                <!-- PAYSLIPS - MULTIPLE FILES -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="section-heading">Payslips 
+                        <span class="badge bg-primary">({{ application.payslips_list|length }} files)</span>
+                    </h5>
+                    
+                    {% if application.payslips_list %}
+                        {% for payslip in application.payslips_list %}
+                            <div class="document-item mb-2">
+                                <i class="fas fa-file-pdf text-danger me-2"></i>
+                                <a href="{{ url_for('main.uploaded_file', filename=payslip.split('uploads/')[-1]) }}" 
+                                   target="_blank" class="text-decoration-none">
+                                    Payslip {{ loop.index }}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No payslips uploaded</p>
+                    {% endif %}
+                </div>
+
+                <!-- BANK STATEMENTS - MULTIPLE FILES -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="section-heading">Bank Statements 
+                        <span class="badge bg-primary">({{ application.bank_statements_list|length }} files)</span>
+                    </h5>
+                    
+                    {% if application.bank_statements_list %}
+                        {% for statement in application.bank_statements_list %}
+                            <div class="document-item mb-2">
+                                <i class="fas fa-file-pdf text-danger me-2"></i>
+                                <a href="{{ url_for('main.uploaded_file', filename=statement.split('uploads/')[-1]) }}" 
+                                   target="_blank" class="text-decoration-none">
+                                    Bank Statement {{ loop.index }}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No bank statements uploaded</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    {% if application.status == 'Pending' %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="section-heading"><i class="fas fa-tasks me-2"></i>Review Decision</h5>
+                <form method="POST" action="{{ url_for('admin.view_application', app_id=application.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group mb-3">
+                        {{ form.note.label(class="form-label") }}
+                        {{ form.note(class="form-control", rows="4", placeholder="Add notes for the applicant...") }}
+                    </div>
+                    <div class="d-flex gap-2">
+                        {{ form.submit_approve(class="btn btn-success") }}
+                        {{ form.submit_decline(class="btn btn-danger") }}
+                        <a href="{{ url_for('admin.list_applications') }}" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body">
+                <p class="mb-2">This application has been <strong class="text-{{ 'success' if application.status == 'Approved' else 'danger' if application.status == 'Declined' else 'primary' }}">{{ application.status|lower }}</strong>.</p>
+                {% if application.admin_note %}
+                    <div class="alert alert-info">
+                        <strong>Admin Note:</strong> {{ application.admin_note }}
+                    </div>
+                {% endif %}
+                <a href="{{ url_for('admin.list_applications') }}" class="btn btn-secondary">Back to Applications</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.document-item {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s;
+}
+
+.document-item:hover {
+    background-color: #e9ecef;
+}
+
+.address-details {
+    border-left: 3px solid #a2b9a8;
+    padding-left: 15px;
+}
+
+.badge {
+    font-size: 0.7em;
+}
+
+/* Unified Light Green Headings - All headings now look like Address */
+.section-heading {
+    color: #a2b9a8 !important;
+    font-weight: 700;
+    border-bottom: 2px solid #a2b9a8;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+}
+
+/* Card styling adjustments */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+</style>
+{% endblock %}

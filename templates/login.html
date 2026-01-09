@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Login - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-title">Welcome Back</h2>
+        <p class="auth-subtitle text-muted">Log in to manage your portal.</p>
+
+        <form method="POST" action="{{ url_for('main.login') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", placeholder="Enter your email") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", placeholder="Enter your password") }}
+            </div>
+
+            <div class="form-check mb-3 text-start">
+                {{ form.remember(class="form-check-input") }}
+                {{ form.remember.label(class="form-check-label") }}
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt me-1"></i> {{ form.submit.label }}
+                </button>
+            </div>
+
+            <div class="text-center small">
+                <a href="{{ url_for('main.forgot_password') }}" class="text-muted">Forgot your password?</a>
+            </div>
+
+            <div class="text-center mt-3">
+                <p class="small">Don't have an account?
+                    <a href="{{ url_for('main.register') }}" class="text-primary">Register here</a>.
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

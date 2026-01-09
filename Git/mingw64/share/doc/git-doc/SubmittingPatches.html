@@ -442,9 +442,6 @@ pre>code {
 <body class="article">
 <div id="header">
 <h1>Submitting Patches</h1>
-<div class="details">
-<span id="revdate">2018-06-07</span>
-</div>
 </div>
 <div id="content">
 <div class="sect1">
@@ -488,7 +485,7 @@ you can build alone.</p>
 you are touching.  These people happen to be the ones who are
 most likely to be knowledgeable enough to help you, but
 they have no obligation to help you (i.e. you ask them for help,
-you don&#8217;t demand).  <code>git log -p &#x2d;&#x2d; <em>$area_you_are_modifying</em></code> would
+you don&#8217;t demand).  <code>git</code> <code>log</code> <code>-p</code> &#x2d;&#x2d; <code><em>$area_you_are_modifying</em></code> would
 help you find out who they are.</p>
 </div>
 </li>
@@ -575,8 +572,8 @@ that come before it. For example, <code>maint</code> is an "older" branch than
 contributors.  Topic branches are created by the Git maintainer (in
 their fork) to organize the current set of incoming contributions on
 the mailing list, and are itemized in the regular "What&#8217;s cooking in
-git.git" announcements.  To find the tip of a topic branch, run <code>git log
---first-parent master..seen</code> and look for the merge commit. The second
+git.git" announcements.  To find the tip of a topic branch, run <code>git</code> <code>log</code>
+<code>--first-parent</code> <code>master</code><code>..</code><code>seen</code> and look for the merge commit. The second
 parent of this commit is the tip of the topic branch.</p>
 </div>
 <div class="paragraph">
@@ -609,7 +606,7 @@ new API features on the cutting edge that recently appeared in
 <td class="content">
 In exceptional cases, a bug that was introduced in an old
 version may have to be fixed for users of releases that are much older
-than the recent releases.  <code>git describe --contains X</code> may describe
+than the recent releases.  <code>git</code> <code>describe</code> <code>--contains</code> <code>X</code> may describe
 <code>X</code> as <code>v2.30.0-rc2-gXXXXXX</code> for the commit <code>X</code> that introduced the
 bug, and the bug may be so high-impact that we may need to issue a new
 maintenance release for Git 2.30.x series, when "Git 2.41.0" is the
@@ -731,7 +728,7 @@ patches separate from other documentation changes.</p>
 <p>Oh, another thing.  We are picky about whitespaces.  Make sure your
 changes do not trigger errors with the sample pre-commit hook shipped
 in <code>templates/hooks--pre-commit</code>.  To help ensure this does not happen,
-run <code>git diff --check</code> on your changes before you commit.</p>
+run <code>git</code> <code>diff</code> <code>--check</code> on your changes before you commit.</p>
 </div>
 </div>
 <div class="sect2">
@@ -792,7 +789,7 @@ identifier for the general area of the code being modified, e.g.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>If in doubt which identifier to use, run <code>git log --no-merges</code> on the
+<p>If in doubt which identifier to use, run <code>git</code> <code>log</code> <code>--no-merges</code> on the
 files you are modifying to see the current conventions.</p>
 </div>
 <div id="summary-section" class="paragraph">
@@ -872,7 +869,7 @@ date)", like this:</p>
 <div class="paragraph">
 <p>The "Copy commit reference" command of gitk can be used to obtain this
 format (with the subject enclosed in a pair of double-quotes), or this
-invocation of <code>git show</code>:</p>
+invocation of <code>git</code> <code>show</code>:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -964,11 +961,19 @@ your patch differs from project to project, so it may be different
 from that of the project you are accustomed to.</p>
 </div>
 <div id="real-name" class="paragraph">
-<p>Also notice that a real name is used in the <code>Signed-off-by</code> trailer. Please
-don&#8217;t hide your real name.</p>
+<p>Please use a known identity in the <code>Signed-off-by</code> trailer, since we cannot
+accept anonymous contributions. It is common, but not required, to use some form
+of your real name. We realize that some contributors are not comfortable doing
+so or prefer to contribute under a pseudonym or preferred name and we can accept
+your patch either way, as long as the name and email you use are distinctive,
+identifying, and not misleading.</p>
+</div>
+<div class="paragraph">
+<p>The goal of this policy is to allow us to have sufficient information to contact
+you if questions arise about your contribution.</p>
 </div>
 <div id="commit-trailers" class="paragraph">
-<p>If you like, you can put extra tags at the end:</p>
+<p>If you like, you can put extra trailers at the end:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -981,7 +986,7 @@ the patch attempts to fix.</p>
 the patch attempts to modify liked the patch.</p>
 </li>
 <li>
-<p><code>Reviewed-by:</code>, unlike the other tags, can only be offered by the
+<p><code>Reviewed-by:</code>, unlike the other trailers, can only be offered by the
 reviewers themselves when they are completely satisfied with the
 patch after a detailed analysis.</p>
 </li>
@@ -1013,8 +1018,41 @@ encourage you to instead use one of the common trailers in this project
 highlighted above.</p>
 </div>
 <div class="paragraph">
-<p>Only capitalize the very first letter of tags, i.e. favor
+<p>Only capitalize the very first letter of the trailer, i.e. favor
 "Signed-off-by" over "Signed-Off-By" and "Acked-by:" over "Acked-By".</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ai">Use of Artificial Intelligence (AI)</h3>
+<div class="paragraph">
+<p>The Developer&#8217;s Certificate of Origin requires contributors to certify
+that they know the origin of their contributions to the project and
+that they have the right to submit it under the project&#8217;s license.
+It&#8217;s not yet clear that this can be legally satisfied when submitting
+significant amount of content that has been generated by AI tools.</p>
+</div>
+<div class="paragraph">
+<p>Another issue with AI generated content is that AIs still often
+hallucinate or just produce bad code, commit messages, documentation
+or output, even when you point out their mistakes.</p>
+</div>
+<div class="paragraph">
+<p>To avoid these issues, we will reject anything that looks AI
+generated, that sounds overly formal or bloated, that looks like AI
+slop, that looks good on the surface but makes no sense, or that
+senders don’t understand or cannot explain.</p>
+</div>
+<div class="paragraph">
+<p>We strongly recommend using AI tools carefully and responsibly.</p>
+</div>
+<div class="paragraph">
+<p>Contributors would often benefit more from AI by using it to guide and
+help them step by step towards producing a solution by themselves
+rather than by asking for a full solution that they would then mostly
+copy-paste. They can also use AI to help with debugging, or with
+checking for obvious mistakes, things that can be improved, things
+that don’t match our style, guidelines or our feedback, before sending
+it to us.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1023,8 +1061,8 @@ highlighted above.</p>
 <p>Git based diff tools generate unidiff which is the preferred format.</p>
 </div>
 <div class="paragraph">
-<p>You do not have to be afraid to use <code>-M</code> option to <code>git diff</code> or
-<code>git format-patch</code>, if your patch involves file renames.  The
+<p>You do not have to be afraid to use <code>-M</code> option to <code>git</code> <code>diff</code> or
+<code>git</code> <code>format-patch</code>, if your patch involves file renames.  The
 receiving end can handle them just fine.</p>
 </div>
 <div id="review-patch" class="paragraph">
@@ -1169,7 +1207,7 @@ are often seen when you are sending an update to what you have
 previously sent.</p>
 </div>
 <div class="paragraph">
-<p>The <code>git format-patch</code> command follows the best current practice to
+<p>The <code>git</code> <code>format-patch</code> command follows the best current practice to
 format the body of an e-mail message.  At the beginning of the
 patch should come your commit message, ending with the
 <code>Signed-off-by</code> trailers, and a line that consists of three dashes,
@@ -1178,9 +1216,9 @@ you are forwarding a patch from somebody else, optionally, at
 the beginning of the e-mail message just before the commit
 message starts, you can put a "From: " line to name that person.
 To change the default "[PATCH]" in the subject to "[&lt;text&gt;]", use
-<code>git format-patch --subject-prefix=&lt;text&gt;</code>.  As a shortcut, you
-can use <code>--rfc</code> instead of <code>--subject-prefix="RFC PATCH"</code>, or
-<code>-v &lt;n&gt;</code> instead of <code>--subject-prefix="PATCH v&lt;n&gt;"</code>.</p>
+<code>git</code> <code>format-patch</code> <code>--subject-prefix=</code><em>&lt;text&gt;</em>.  As a shortcut, you
+can use <code>--rfc</code> instead of <code>--subject-prefix=</code>"RFC <code>PATCH</code>", or
+<code>-v</code> <em>&lt;n&gt;</em> instead of <code>--subject-prefix=</code>"PATCH <code>v</code><em>&lt;n&gt;</em>".</p>
 </div>
 <div class="paragraph">
 <p>You often want to add additional explanation about the patch,
@@ -1189,20 +1227,33 @@ material between the three-dash line and the diffstat.  For
 patches requiring multiple iterations of review and discussion,
 an explanation of changes between each iteration can be kept in
 Git-notes and inserted automatically following the three-dash
-line via <code>git format-patch --notes</code>.</p>
+line via <code>git</code> <code>format-patch</code> <code>--notes</code>.</p>
 </div>
 <div id="the-topic-summary" class="paragraph">
 <p><strong>This is EXPERIMENTAL</strong>.</p>
 </div>
 <div class="paragraph">
-<p>When sending a topic, you can propose a one-paragraph summary that
-should appear in the "What&#8217;s cooking" report when it is picked up to
-explain the topic.  If you choose to do so, please write a 2-5 line
-paragraph that will fit well in our release notes (see many bulleted
-entries in the Documentation/RelNotes/* files for examples), and make
-it the first paragraph of the cover letter.  For a single-patch
-series, use the space between the three-dash line and the diffstat, as
-described earlier.</p>
+<p>When sending a topic, you can optionally propose a topic name and/or a
+one-paragraph summary that should appear in the "What&#8217;s cooking"
+report when it is picked up to explain the topic.  If you choose to do
+so, please write a 2-5 line paragraph that will fit well in our
+release notes (see many bulleted entries in the
+Documentation/RelNotes/* files for examples), and make it the first
+(or second, if including a suggested topic name) paragraph of the
+cover letter.  If suggesting a topic name, use the format
+"XX/your-topic-name", where "XX" is a stand-in for the primary
+author&#8217;s initials, and "your-topic-name" is a brief, dash-delimited
+description of what your topic does.  For a single-patch series, use
+the space between the three-dash line and the diffstat, as described
+earlier.</p>
+</div>
+<div id="multi-series-efforts" class="paragraph">
+<p>If your patch series is part of a larger effort spanning multiple
+patch series, briefly describe the broader goal, and state where the
+current series fits into that goal.  If you are suggesting a topic
+name as in <a href="#the-topic-summary">section above</a>, consider
+"XX/the-broader-goal-part-one", "XX/the-broader-goal-part-two", and so
+on.</p>
 </div>
 <div id="attachment" class="paragraph">
 <p>Do not attach the patch as a MIME attachment, compressed or not.
@@ -1230,7 +1281,7 @@ origin that is done poorly or does incorrect things.</p>
 <div class="paragraph">
 <p>If you really really really really want to do a PGP signed
 patch, format it as "multipart/signed", not a text/plain message
-that starts with <code>-----BEGIN PGP SIGNED MESSAGE-----</code>.  That is
+that starts with <code>-----BEGIN</code> <code>PGP</code> <code>SIGNED</code> <code>MESSAGE-----</code>.  That is
 not a text/plain, it&#8217;s something else.</p>
 </div>
 </div>
@@ -1367,24 +1418,28 @@ repositories.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>git-gui/</code> comes from git-gui project, maintained by Johannes Sixt:</p>
+<p><code>git-gui/</code> comes from the git-gui project, maintained by Johannes Sixt:</p>
 <div class="literalblock">
 <div class="content">
 <pre>https://github.com/j6t/git-gui</pre>
 </div>
 </div>
+<div class="literalblock">
+<div class="content">
+<pre>Contibutions should go via the git mailing list.</pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>gitk-git/</code> comes from Paul Mackerras&#8217;s gitk project:</p>
+<p><code>gitk-git/</code> comes from the gitk project, maintained by Johannes Sixt:</p>
 <div class="literalblock">
 <div class="content">
-<pre>git://git.ozlabs.org/~paulus/gitk</pre>
+<pre>https://github.com/j6t/gitk</pre>
 </div>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>Those who are interested in improving gitk can volunteer to help Paul
-maintain it, cf. &lt;YntxL/fTplFm8lr6@cleo&gt;.</pre>
+<pre>Contibutions should go via the git mailing list.</pre>
 </div>
 </div>
 </li>
@@ -1441,7 +1496,7 @@ You can find detailed instructions how to fork here:
 <div class="paragraph">
 <p>After the initial setup, CI will run whenever you push new changes
 to your fork of Git on GitHub.  You can monitor the test state of all your
-branches here: <code>https://github.com/&lt;Your GitHub handle&gt;/git/actions/workflows/main.yml</code></p>
+branches here: <code>https://github.com/</code>&lt;Your <code>GitHub</code> <code>handle</code>&gt;<code>/git/actions/workflows/main.yml</code></p>
 </div>
 <div class="paragraph">
 <p>If a branch does not pass all test cases then it will be marked with a
@@ -1553,7 +1608,7 @@ it.</pre>
 <div class="paragraph">
 <p>"|" in the <code>*Summary*</code> buffer can be used to pipe the current
 message to an external program, and this is a handy way to drive
-<code>git am</code>.  However, if the message is MIME encoded, what is
+<code>git</code> <code>am</code>.  However, if the message is MIME encoded, what is
 piped into the program is the representation you see in your
 <code>*Article*</code> buffer after unwrapping MIME.  This is often not what
 you would want for two reasons.  It tends to screw up non-ASCII
@@ -1583,7 +1638,7 @@ this problem around.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

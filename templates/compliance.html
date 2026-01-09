@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="compliance-header">
+        <h1><i class="fas fa-gavel me-2"></i> Regulatory Compliance</h1>
+        <div class="compliance-badges">
+            <div class="badge ncr-badge">
+                <i class="fas fa-certificate"></i> NCR Registered
+            </div>
+            <div class="badge popia-badge">
+                <i class="fas fa-shield-alt"></i> POPIA Compliant
+            </div>
+        </div>
+    </div>
+
+    <div class="compliance-content">
+        <div class="alert alert-primary">
+            <i class="fas fa-info-circle me-2"></i>
+            Alien Emergency Fund operates in full compliance with South African financial regulations.
+        </div>
+
+        <div class="compliance-section">
+            <h2><i class="fas fa-balance-scale me-2"></i> National Credit Act (NCA)</h2>
+            <div class="nca-compliance">
+                <div class="nca-item">
+                    <div class="nca-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="nca-text">
+                        <h3>Interest Rate Caps</h3>
+                        <p>We adhere to NCA-prescribed maximum interest rates (currently 27.5% APR)</p>
+                    </div>
+                </div>
+                <div class="nca-item">
+                    <div class="nca-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="nca-text">
+                        <h3>Cooling-off Period</h3>
+                        <p>5 business days to cancel any agreement without penalty</p>
+                    </div>
+                </div>
+                <div class="nca-item">
+                    <div class="nca-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="nca-text">
+                        <h3>Affordability Assessment</h3>
+                        <p>All applications undergo strict affordability checks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="compliance-section">
+            <h2><i class="fas fa-database me-2"></i> POPIA Compliance</h2>
+            <div class="popia-compliance">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="fas fa-lock"></i> Data Protection</h3>
+                        <ul>
+                            <li>All personal information is encrypted</li>
+                            <li>Strict access controls implemented</li>
+                            <li>Regular security audits conducted</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="fas fa-user-shield"></i> Your Rights</h3>
+                        <ul>
+                            <li>Right to access your information</li>
+                            <li>Right to request corrections</li>
+                            <li>Right to complain to the Information Regulator</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="compliance-section">
+            <h2><i class="fas fa-phone-alt me-2"></i> Complaints Procedure</h2>
+            <div class="complaints-process">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Contact Us</h3>
+                    <p>Email complaints to: complaints@alienemergencyfund.co.za</p>
+                    <p>We aim to respond within 48 hours</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Internal Resolution</h3>
+                    <p>Our compliance team will investigate your complaint</p>
+                    <p>Typical resolution time: 5 business days</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Regulatory Escalation</h3>
+                    <p>If unsatisfied, contact:</p>
+                    <p><strong>National Credit Regulator</strong><br>
+                    Tel: 0860 627 627<br>
+                    Email: complaints@ncr.org.za</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="compliance-section">
+            <h2><i class="fas fa-file-alt me-2"></i> Regulatory Documents</h2>
+            <div class="documents">
+                <a href="#" class="document-link">
+                    <i class="fas fa-file-pdf"></i> NCR Certificate of Registration
+                </a>
+                <a href="#" class="document-link">
+                    <i class="fas fa-file-pdf"></i> POPIA Compliance Certificate
+                </a>
+                <a href="#" class="document-link">
+                    <i class="fas fa-file-pdf"></i> CPA Compliance Report
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.compliance-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.compliance-header h1 {
+    color: var(--secondary);
+}
+
+.compliance-badges {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.ncr-badge {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.popia-badge {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.compliance-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 50px;
+}
+
+.compliance-section {
+    margin-bottom: 40px;
+}
+
+.compliance-section h2 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.nca-compliance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.nca-item {
+    display: flex;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.nca-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-right: 15px;
+}
+
+.popia-compliance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-title i {
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.complaints-process {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.step {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 15px;
+}
+
+.documents {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.document-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--dark);
+    transition: all 0.3s ease;
+}
+
+.document-link:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.document-link i {
+    color: var(--danger);
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+</style>
+{% endblock %}

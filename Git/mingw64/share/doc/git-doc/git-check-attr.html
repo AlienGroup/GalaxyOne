@@ -471,7 +471,8 @@ pre>code {
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1">-a, --all</dt>
+<dt class="hdlist1">-a</dt>
+<dt class="hdlist1">--all</dt>
 <dd>
 <p>List all attributes that are associated with the specified
 paths.  If this option is used, then <em>unspecified</em> attributes
@@ -479,7 +480,7 @@ will not be included in the output.</p>
 </dd>
 <dt class="hdlist1">--cached</dt>
 <dd>
-<p>Consider <code>.gitattributes</code> in the index only, ignoring the working tree.</p>
+<p>Consider .<code>gitattributes</code> in the index only, ignoring the working tree.</p>
 </dd>
 <dt class="hdlist1">--stdin</dt>
 <dd>
@@ -572,22 +573,15 @@ README caveat=unspecified</pre>
 <ul>
 <li>
 <p>Listing a single attribute:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ git check-attr diff org/example/MyClass.java
 org/example/MyClass.java: diff: java</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Listing multiple attributes for a file:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ git check-attr crlf diff myAttr -- org/example/MyClass.java
@@ -596,13 +590,9 @@ org/example/MyClass.java: diff: java
 org/example/MyClass.java: myAttr: set</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Listing all attributes for a file:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ git check-attr --all -- org/example/MyClass.java
@@ -610,13 +600,9 @@ org/example/MyClass.java: diff: java
 org/example/MyClass.java: myAttr: set</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Listing an attribute for multiple files:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ git check-attr myAttr -- org/example/MyClass.java org/example/NoMyAttr.java
@@ -624,18 +610,17 @@ org/example/MyClass.java: myAttr: set
 org/example/NoMyAttr.java: myAttr: unspecified</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Not all values are equally unambiguous:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ git check-attr caveat README
 README: caveat: unspecified</pre>
 </div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -658,7 +643,7 @@ README: caveat: unspecified</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Terms and Conditions - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="legal-header">
+        <h1><i class="fas fa-file-contract me-2"></i> Terms and Conditions</h1>
+        <div class="compliance-badge">
+            <i class="fas fa-shield-alt"></i> NCR Registered Credit Provider (NCRCP12345)
+        </div>
+    </div>
+
+    <div class="legal-content">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            These terms are governed by South African law, specifically the National Credit Act 34 of 2005.
+        </div>
+
+        <div class="terms-section">
+            <h2>1. Definitions</h2>
+            <p>In these Terms:</p>
+            <ul>
+                <li><strong>"NCA"</strong> means the National Credit Act 34 of 2005 and its regulations</li>
+                <li><strong>"Credit Provider"</strong> means Alien Emergency Fund (NCRCP12345)</li>
+                <li><strong>"Consumer"</strong> means the individual applying for credit</li>
+            </ul>
+        </div>
+
+        <div class="terms-section">
+            <h2>2. Loan Agreement Terms</h2>
+            <ol>
+                <li>All loans are subject to affordability assessment in accordance with NCA regulations</li>
+                <li>Maximum APR is 27.5% as prescribed by the NCA</li>
+                <li>Minimum repayment term is 3 months, maximum is 12 months</li>
+                <li>Early settlement is permitted without penalty</li>
+            </ol>
+        </div>
+
+        <div class="terms-section">
+            <h2>3. Consumer Rights</h2>
+            <p>In terms of the NCA, you have the right to:</p>
+            <ul>
+                <li>A 5 business day cooling-off period to cancel the agreement</li>
+                <li>Receive pre-agreement statements and quotations</li>
+                <li>Request debt review if experiencing financial difficulties</li>
+                <li>Receive documents in an official language of your choice</li>
+            </ul>
+        </div>
+
+        <div class="terms-section">
+            <h2>4. Data Protection (POPIA)</h2>
+            <p>We comply with the Protection of Personal Information Act 4 of 2013:</p>
+            <ol>
+                <li>Your personal information will only be used for the purpose of assessing your application</li>
+                <li>We implement appropriate security measures to protect your data</li>
+                <li>You may request access to or correction of your personal information</li>
+            </ol>
+        </div>
+
+        <div class="terms-section">
+            <h2>5. Complaints Procedure</h2>
+            <p>If you have any complaints:</p>
+            <ol>
+                <li>Contact us first at complaints@alienemergencyfund.co.za</li>
+                <li>If unresolved, you may contact the National Credit Regulator:
+                    <ul>
+                        <li>Tel: 0860 627 627</li>
+                        <li>Email: complaints@ncr.org.za</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="terms-section">
+            <h2>6. General</h2>
+            <ol>
+                <li>These terms are governed by South African law</li>
+                <li>The credit provider is registered with the NCR as required by law</li>
+                <li>We reserve the right to amend these terms with proper notice</li>
+            </ol>
+        </div>
+
+        <div class="effective-date">
+            <p><strong>Effective Date:</strong> 1 January 2024</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.legal-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.legal-header h1 {
+    color: var(--secondary);
+}
+
+.compliance-badge {
+    display: inline-block;
+    background-color: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.compliance-badge i {
+    color: var(--primary);
+    margin-right: 5px;
+}
+
+.legal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 50px;
+}
+
+.terms-section {
+    margin-bottom: 30px;
+}
+
+.terms-section h2 {
+    color: var(--primary);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.effective-date {
+    text-align: right;
+    font-style: italic;
+    color: #666;
+    margin-top: 40px;
+}
+</style>
+{% endblock %}

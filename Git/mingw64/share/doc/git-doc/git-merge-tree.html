@@ -505,12 +505,19 @@ merge base, creating a virtual merge base by merging the merge bases)</p>
 <div class="sectionbody">
 <div class="dlist">
 <dl>
+<dt class="hdlist1">--stdin</dt>
+<dd>
+<p>Read the commits to merge from the standard input rather than
+the command-line. See <a href="#INPUT">INPUT FORMAT</a> below for more
+information.  Implies <code>-z</code>.</p>
+</dd>
 <dt class="hdlist1">-z</dt>
 <dd>
 <p>Do not quote filenames in the &lt;Conflicted file info&gt; section,
 and end each filename with a NUL character rather than
 newline.  Also begin the messages section with a NUL character
-instead of a newline.  See <a href="#OUTPUT">OUTPUT</a> below for more information.</p>
+instead of a newline.  See <a href="#OUTPUT">OUTPUT</a> below for more
+information.</p>
 </dd>
 <dt class="hdlist1">--name-only</dt>
 <dd>
@@ -520,12 +527,20 @@ files, just provide a list of filenames with conflicts (and
 do not list filenames multiple times if they have multiple
 conflicting stages).</p>
 </dd>
-<dt class="hdlist1">--[no-]messages</dt>
+<dt class="hdlist1">--messages</dt>
+<dt class="hdlist1">--no-messages</dt>
 <dd>
 <p>Write any informational messages such as "Auto-merging &lt;path&gt;"
 or CONFLICT notices to the end of stdout.  If unspecified, the
 default is to include these messages if there are merge
 conflicts, and to omit them otherwise.</p>
+</dd>
+<dt class="hdlist1">--quiet</dt>
+<dd>
+<p>Disable all output from the program.  Useful when you are only
+interested in the exit status.  Allows merge-tree to exit
+early when it finds a conflict, and allows it to avoid writing
+most objects created by merges.</p>
 </dd>
 <dt class="hdlist1">--allow-unrelated-histories</dt>
 <dd>
@@ -536,11 +551,18 @@ check and make the merge proceed anyway.</p>
 <dt class="hdlist1">--merge-base=&lt;tree-ish&gt;</dt>
 <dd>
 <p>Instead of finding the merge-bases for &lt;branch1&gt; and &lt;branch2&gt;,
-specify a merge-base for the merge, and specifying multiple bases is
-currently not supported. This option is incompatible with <code>--stdin</code>.</p>
+specify a merge-base for the merge.  This option is incompatible with
+<code>--stdin</code>.</p>
 <div class="paragraph">
-<p>As the merge-base is provided directly, &lt;branch1&gt; and &lt;branch2&gt; do not need
-to specify commits; trees are enough.</p>
+<p>Specifying multiple bases is currently not supported, which means that when
+merging two branches with more than one merge-base, using this option may
+cause merge results to differ from what <code>git</code> <code>merge</code> would compute.  This
+can include potentially losing some changes made on one side of the history
+in the resulting merge.</p>
+</div>
+<div class="paragraph">
+<p>With this option, since the merge-base is provided directly, &lt;branch1&gt; and
+&lt;branch2&gt; do not need to specify commits; trees are enough.</p>
 </div>
 </dd>
 <dt class="hdlist1">-X&lt;option&gt;</dt>
@@ -603,10 +625,8 @@ NUL</pre>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>   0: merge had conflicts
-   1: merge was clean
-   &lt;0: something prevented the merge from running (e.g. access to repository
-objects denied by filesystem)</pre>
+<pre>0: merge had conflicts
+1: merge was clean</pre>
 </div>
 </div>
 </div>
@@ -614,7 +634,7 @@ objects denied by filesystem)</pre>
 <h3 id="OIDTLT">OID of toplevel tree</h3>
 <div class="paragraph">
 <p>This is a tree object that represents what would be checked out in the
-working tree at the end of <code>git merge</code>.  If there were conflicts, then
+working tree at the end of <code>git</code> <code>merge</code>.  If there were conflicts, then
 files within this tree may have embedded conflict markers.  This section
 is always followed by a newline (or NUL if <code>-z</code> is passed).</p>
 </div>
@@ -788,7 +808,7 @@ with <a href="git-merge.html">git-merge(1)</a>:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_input_format">INPUT FORMAT</h2>
+<h2 id="INPUT">INPUT FORMAT</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><em>git merge-tree --stdin</em> input format is fully text based. Each line
@@ -909,7 +929,7 @@ large repositories).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

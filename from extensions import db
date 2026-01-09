@@ -1,0 +1,16 @@
+from extensions import db
+from models import User
+from werkzeug.security import generate_password_hash
+
+admin = User(
+    first_name="Admin",
+    last_name="User",
+    email="alienemergencyfund@gmail.com",
+    password_hash=generate_password_hash("admin123"),
+    is_admin=True,
+    phone="0800123456",
+    address="123 Main St, South Africa"
+)
+
+db.session.add(admin)
+db.session.commit()

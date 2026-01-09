@@ -453,13 +453,13 @@ pre>code {
 <div class="sectionbody">
 <div class="verseblock">
 <pre class="content"><em>git pack-objects</em> [-q | --progress | --all-progress] [--all-progress-implied]
-        [--no-reuse-delta] [--delta-base-offset] [--non-empty]
-        [--local] [--incremental] [--window=&lt;n&gt;] [--depth=&lt;n&gt;]
-        [--revs [--unpacked | --all]] [--keep-pack=&lt;pack-name&gt;]
-        [--cruft] [--cruft-expiration=&lt;time&gt;]
-        [--stdout [--filter=&lt;filter-spec&gt;] | &lt;base-name&gt;]
-        [--shallow] [--keep-true-parents] [--[no-]sparse]
-        [--full-name-hash] [--path-walk] &lt; &lt;object-list&gt;</pre>
+                   [--no-reuse-delta] [--delta-base-offset] [--non-empty]
+                   [--local] [--incremental] [--window=&lt;n&gt;] [--depth=&lt;n&gt;]
+                   [--revs [--unpacked | --all]] [--keep-pack=&lt;pack-name&gt;]
+                   [--cruft] [--cruft-expiration=&lt;time&gt;]
+                   [--stdout [--filter=&lt;filter-spec&gt;] | &lt;base-name&gt;]
+                   [--shallow] [--keep-true-parents] [--[no-]sparse]
+                   [--name-hash-version=&lt;n&gt;] [--path-walk] &lt; &lt;object-list&gt;</pre>
 </div>
 </div>
 </div>
@@ -525,7 +525,7 @@ individual object names.  The revision arguments are processed
 the same way as <em>git rev-list</em> with the <code>--objects</code> flag
 uses its <code>commit</code> arguments to build the list of objects it
 outputs.  The objects on the resulting list are packed.
-Besides revisions, <code>--not</code> or <code>--shallow &lt;SHA-1&gt;</code> lines are
+Besides revisions, <code>--not</code> or <code>--shallow</code> <em>&lt;SHA-1&gt;</em> lines are
 also accepted.</p>
 </dd>
 <dt class="hdlist1">--unpacked</dt>
@@ -547,13 +547,22 @@ included.</p>
 reference was included in the resulting packfile.  This
 can be useful to send new tags to native Git clients.</p>
 </dd>
-<dt class="hdlist1">--stdin-packs</dt>
+<dt class="hdlist1">--stdin-packs[=&lt;mode&gt;]</dt>
 <dd>
 <p>Read the basenames of packfiles (e.g., <code>pack-1234abcd.pack</code>)
 from the standard input, instead of object names or revision
 arguments. The resulting pack contains all objects listed in the
 included packs (those not beginning with <code>^</code>), excluding any
 objects listed in the excluded packs (beginning with <code>^</code>).</p>
+<div class="paragraph">
+<p>When <code>mode</code> is "follow", objects from packs not listed on stdin receive
+special treatment. Objects within unlisted packs will be included if
+those objects are (1) reachable from the included packs, and (2) not
+found in any excluded packs. This mode is useful, for example, to
+resurrect once-unreachable objects found in cruft packs to generate
+packs which are closed under reachability up to the boundary set by the
+excluded packs.</p>
+</div>
 <div class="paragraph">
 <p>Incompatible with <code>--revs</code>, or options that imply <code>--revs</code> (such as
 <code>--all</code>), with the exception of <code>--unpacked</code>, which is compatible.</p>
@@ -562,8 +571,8 @@ objects listed in the excluded packs (beginning with <code>^</code>).</p>
 <dt class="hdlist1">--cruft</dt>
 <dd>
 <p>Packs unreachable objects into a separate "cruft" pack, denoted
-by the existence of a <code>.mtimes</code> file. Typically used by <code>git
-repack --cruft</code>. Callers provide a list of pack names and
+by the existence of a .<code>mtimes</code> file. Typically used by <code>git</code>
+<code>repack</code> <code>--cruft</code>. Callers provide a list of pack names and
 indicate which packs will remain in the repository, along with
 which packs will be deleted (indicated by the <code>-</code> prefix). The
 contents of the cruft pack are all objects not contained in the
@@ -587,7 +596,7 @@ options which imply <code>--revs</code>.</p>
 <dt class="hdlist1">--cruft-expiration=&lt;approxidate&gt;</dt>
 <dd>
 <p>If specified, objects are eliminated from the cruft pack if they
-have an mtime older than <code>&lt;approxidate&gt;</code>. If unspecified (and
+have an mtime older than <em>&lt;approxidate&gt;</em>. If unspecified (and
 given <code>--cruft</code>), then no objects are eliminated.</p>
 </dd>
 <dt class="hdlist1">--window=&lt;n&gt;</dt>
@@ -642,7 +651,7 @@ otherwise been packed.</p>
 <dd>
 <p>This flag causes an object already in the given pack to be
 ignored, even if it would have otherwise been
-packed. <code>&lt;pack-name&gt;</code> is the pack file name without
+packed. <em>&lt;pack-name&gt;</em> is the pack file name without
 leading directory (e.g. <code>pack-123.pack</code>). The option could be
 specified multiple times to keep multiple packs.</p>
 </dd>
@@ -717,7 +726,8 @@ and defaults to -1,  the zlib default,  if neither is set.
 Add --no-reuse-object if you want to force a uniform compression
 level on all data no matter the source.</p>
 </dd>
-<dt class="hdlist1">--[no-]sparse</dt>
+<dt class="hdlist1">--sparse</dt>
+<dt class="hdlist1">--no-sparse</dt>
 <dd>
 <p>Toggle the "sparse" algorithm to determine which objects to include in
 the pack, when combined with the "--revs" option. This algorithm
@@ -737,7 +747,7 @@ option only makes sense in conjunction with --stdout.</p>
 <div class="paragraph">
 <p>Note: A thin pack violates the packed archive format by omitting
 required objects and is thus unusable by Git without making it
-self-contained. Use <code>git index-pack --fix-thin</code>
+self-contained. Use <code>git</code> <code>index-pack</code> <code>--fix-thin</code>
 (see <a href="git-index-pack.html">git-index-pack(1)</a>) to restore the self-contained property.</p>
 </div>
 </dd>
@@ -759,10 +769,10 @@ compactness.  Depending on the average delta chain
 length, this option typically shrinks the resulting
 packfile by 3-5 per-cent.</p>
 <div class="paragraph">
-<p>Note: Porcelain commands such as <code>git gc</code> (see <a href="git-gc.html">git-gc(1)</a>),
-<code>git repack</code> (see <a href="git-repack.html">git-repack(1)</a>) pass this option by default
+<p>Note: Porcelain commands such as <code>git</code> <code>gc</code> (see <a href="git-gc.html">git-gc(1)</a>),
+<code>git</code> <code>repack</code> (see <a href="git-repack.html">git-repack(1)</a>) pass this option by default
 in modern Git when they put objects in your repository into pack files.
-So does <code>git bundle</code> (see <a href="git-bundle.html">git-bundle(1)</a>) when it creates a bundle.</p>
+So does <code>git</code> <code>bundle</code> (see <a href="git-bundle.html">git-bundle(1)</a>) when it creates a bundle.</p>
 </div>
 </dd>
 <dt class="hdlist1">--threads=&lt;n&gt;</dt>
@@ -791,7 +801,7 @@ nevertheless.</p>
 <dd>
 <p>Omits certain objects (usually blobs) from the resulting
 packfile.  See <a href="git-rev-list.html">git-rev-list(1)</a> for valid
-<code>&lt;filter-spec&gt;</code> forms.</p>
+<em>&lt;filter-spec&gt;</em> forms.</p>
 </dd>
 <dt class="hdlist1">--no-filter</dt>
 <dd>
@@ -848,17 +858,50 @@ removed). This implies <code>--revs</code>.</p>
 <p>Restrict delta matches based on "islands". See DELTA ISLANDS
 below.</p>
 </dd>
+<dt class="hdlist1">--name-hash-version=&lt;n&gt;</dt>
+<dd>
+<p>While performing delta compression, Git groups objects that may be
+similar based on heuristics using the path to that object. While
+grouping objects by an exact path match is good for paths with
+many versions, there are benefits for finding delta pairs across
+different full paths. Git collects objects by type and then by a
+"name hash" of the path and then by size, hoping to group objects
+that will compress well together.</p>
+<div class="paragraph">
+<p>The default name hash version is <code>1</code>, which prioritizes hash locality by
+considering the final bytes of the path as providing the maximum magnitude
+to the hash function. This version excels at distinguishing short paths
+and finding renames across directories. However, the hash function depends
+primarily on the final 16 bytes of the path. If there are many paths in
+the repo that have the same final 16 bytes and differ only by parent
+directory, then this name-hash may lead to too many collisions and cause
+poor results. At the moment, this version is required when writing
+reachability bitmap files with <code>--write-bitmap-index</code>.</p>
+</div>
+<div class="paragraph">
+<p>The name hash version <code>2</code> has similar locality features as version <code>1</code>,
+except it considers each path component separately and overlays the hashes
+with a shift. This still prioritizes the final bytes of the path, but also
+"salts" the lower bits of the hash using the parent directory names. This
+method allows for some of the locality benefits of version <code>1</code> while
+breaking most of the collisions from a similarly-named file appearing in
+many different directories. At the moment, this version is not allowed
+when writing reachability bitmap files with <code>--write-bitmap-index</code> and it
+will be automatically changed to version <code>1</code>.</p>
+</div>
+</dd>
 <dt class="hdlist1">--path-walk</dt>
 <dd>
-<p>By default, <code>git pack-objects</code> walks objects in an order that
-presents trees and blobs in an order unrelated to the path they
-appear relative to a commit&#8217;s root tree. The <code>--path-walk</code> option
-enables a different walking algorithm that organizes trees and
-blobs by path. This has the potential to improve delta compression
-especially in the presence of filenames that cause collisions in
-Git&#8217;s default name-hash algorithm. Due to changing how the objects
-are walked, this option is not compatible with <code>--delta-islands</code>,
-<code>--shallow</code>, or <code>--filter</code>.</p>
+<p>Perform compression by first organizing objects by path, then a
+second pass that compresses across paths as normal. This has the
+potential to improve delta compression especially in the presence
+of filenames that cause collisions in Git&#8217;s default name-hash
+algorithm.</p>
+<div class="paragraph">
+<p>Incompatible with <code>--delta-islands</code>, <code>--shallow</code>, or <code>--filter</code>. The
+<code>--use-bitmap-index</code> option will be ignored in the presence of
+<code>--path-walk.</code></p>
+</div>
 </dd>
 </dl>
 </div>
@@ -1007,7 +1050,7 @@ attribute <code>delta</code> set to false.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

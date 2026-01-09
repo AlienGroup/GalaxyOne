@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Payment Cancelled - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<section class="py-5 text-center">
+    <div class="container">
+        <div class="card shadow-sm bg-white p-4">
+            <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
+            <h2 class="text-danger mb-3">Payment Cancelled</h2>
+            <p class="lead">It looks like your payment was cancelled or failed to process.</p>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-dark mt-4">
+                <i class="fas fa-arrow-left me-2"></i> Return to Dashboard
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

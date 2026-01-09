@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% block title %}Applications - Admin - Alien Emergency Fund{% endblock %}
+
+{% block styles %}
+<style>
+    .applications-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-top: 20px;
+    }
+    
+    .page-header {
+        border-bottom: 2px solid #fd7e14;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .search-box {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .search-form {
+        display: flex;
+        gap: 10px;
+        align-items: end;
+    }
+    
+    .search-input-group {
+        flex: 1;
+    }
+    
+    .search-btn {
+        background: linear-gradient(135deg, #fd7e14, #e66a00);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(253, 126, 20, 0.3);
+    }
+    
+    .filter-nav {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .filter-nav a {
+        text-decoration: none;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border-radius: 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        color: #6c757d;
+    }
+    
+    .filter-nav a:hover {
+        background: #e9ecef;
+        color: #495057;
+    }
+    
+    .filter-nav a.active {
+        background: #fd7e14;
+        color: white;
+    }
+    
+    .applications-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .applications-table thead {
+        background: linear-gradient(135deg, #fd7e14, #e66a00);
+        color: white;
+    }
+    
+    .applications-table th {
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .applications-table td {
+        padding: 15px 12px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+    
+    .applications-table tbody tr {
+        transition: all 0.2s ease;
+    }
+    
+    .applications-table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .applications-table tbody tr.highlight {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-signed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-declined {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .loan-amount {
+        font-weight: 600;
+        color: #28a745;
+        font-size: 1.1rem;
+    }
+    
+    .applicant-name {
+        font-weight: 600;
+        color: #343a40;
+        font-size: 1rem;
+    }
+    
+    .view-btn {
+        background: linear-gradient(135deg, #fd7e14, #e66a00);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(253, 126, 20, 0.3);
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: #dee2e6;
+        margin-bottom: 15px;
+    }
+    
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #fd7e14;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fd7e14;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-info {
+        background: #e7f3ff;
+        border: 1px solid #b6d7ff;
+        border-radius: 6px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    
+    .clear-search {
+        background: #6c757d;
+        border: none;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+    
+    .clear-search:hover {
+        background: #5a6268;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="applications-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2 class="mb-2" style="color: #fd7e14;">
+            <i class="fas fa-file-alt me-2"></i>Loan Applications
+        </h2>
+        <p class="mb-0 text-muted">Showing <strong>{{ filter }}</strong> Applications</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="stat-number">{{ applications|length }}</div>
+            <div class="stat-label">Total Applications</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">
+                {{ applications|selectattr("status", "equalto", "Pending")|list|length }}
+            </div>
+            <div class="stat-label">Pending Review</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">
+                {{ applications|selectattr("status", "equalto", "Approved")|list|length }}
+            </div>
+            <div class="stat-label">Approved</div>
+        </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+        <h5 class="mb-3"><i class="fas fa-search me-2"></i>Search Applications</h5>
+        <form method="GET" action="{{ url_for('admin.list_applications') }}" class="search-form">
+            <div class="search-input-group">
+                <label class="form-label fw-medium">Search by Name or Application Reference</label>
+                <input type="text" 
+                       class="form-control" 
+                       name="search" 
+                       placeholder="Enter applicant name or application reference..."
+                       value="{{ request.args.get('search', '') }}">
+                <div class="form-text">Search will find matches in full names and application IDs</div>
+            </div>
+            <div>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search me-1"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Search Results Info -->
+    {% if request.args.get('search') %}
+    <div class="search-info">
+        <div>
+            <strong>Search Results:</strong> Showing applications matching "{{ request.args.get('search') }}"
+        </div>
+        <div>
+            <a href="{{ url_for('admin.list_applications', status=request.args.get('status', '')) }}" class="clear-search">
+                <i class="fas fa-times me-1"></i> Clear Search
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filter Navigation -->
+    <div class="filter-nav">
+        <span class="me-3 text-muted"><strong>Filter by Status:</strong></span>
+        <a href="{{ url_for('admin.list_applications', search=request.args.get('search', '')) }}" 
+           class="{% if filter == 'All' %}active{% endif %}">All</a>
+        <a href="{{ url_for('admin.list_applications', status='Pending', search=request.args.get('search', '')) }}" 
+           class="{% if filter == 'Pending' %}active{% endif %}">Pending</a>
+        <a href="{{ url_for('admin.list_applications', status='Approved', search=request.args.get('search', '')) }}" 
+           class="{% if filter == 'Approved' %}active{% endif %}">Approved</a>
+        <a href="{{ url_for('admin.list_applications', status='Signed', search=request.args.get('search', '')) }}" 
+           class="{% if filter == 'Signed' %}active{% endif %}">Signed</a>
+        <a href="{{ url_for('admin.list_applications', status='Declined', search=request.args.get('search', '')) }}" 
+           class="{% if filter == 'Declined' %}active{% endif %}">Declined</a>
+    </div>
+
+    <!-- Applications Table -->
+    {% if applications %}
+    <div class="table-responsive">
+        <table class="applications-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Applicant</th>
+                    <th>Amount</th>
+                    <th>Term</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for app in applications %}
+                <tr class="{% if app.status == 'Pending' %}highlight{% endif %}">
+                    <td><strong>#{{ app.id }}</strong></td>
+                    <td>
+                        <div class="applicant-name">{{ app.full_name }}</div>
+                        {% if app.email %}
+                        <small class="text-muted">{{ app.email }}</small>
+                        {% endif %}
+                    </td>
+                    <td class="loan-amount">R{{ '%.2f' % app.loan_amount }}</td>
+                    <td>{{ app.loan_term }} months</td>
+                    <td>
+                        <span class="status-badge 
+                            {% if app.status == 'Pending' %}status-pending
+                            {% elif app.status == 'Approved' %}status-approved
+                            {% elif app.status == 'Signed' %}status-signed
+                            {% elif app.status == 'Declined' %}status-declined
+                            {% endif %}">
+                            {{ app.status }}
+                        </span>
+                    </td>
+                    <td>{{ app.date_submitted.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.view_application', app_id=app.id) }}" class="view-btn">
+                            <i class="fas fa-eye me-1"></i> View
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h4>No Applications Found</h4>
+        <p>
+            {% if request.args.get('search') %}
+            No {{ filter.lower() }} applications found matching "{{ request.args.get('search') }}".
+            {% else %}
+            There are no {{ filter.lower() }} applications at the moment.
+            {% endif %}
+        </p>
+        {% if request.args.get('search') %}
+        <a href="{{ url_for('admin.list_applications', status=request.args.get('status', '')) }}" class="view-btn mt-3">
+            <i class="fas fa-times me-1"></i> Clear Search
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

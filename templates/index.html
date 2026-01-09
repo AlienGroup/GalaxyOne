@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Home - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-text">
+      <h1>Small Emergency Loans in South Africa</h1>
+      <p class="lead">Fast, Transparent & POPIA-Compliant — NCRCP12345</p>
+      <a href="{{ url_for('main.apply') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-paper-plane me-2"></i> Apply Now
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <span>✔ NCR Registered</span>
+  <span>✔ POPIA Compliant</span>
+  <span>✔ Secure Payments</span>
+  <span>✔ No Hidden Fees</span>
+</div>
+
+<section class="why-choose-section">
+  <div class="container">
+    <h2 class="text-center mb-4">Why Choose Us?</h2>
+    <div class="features-row">
+      <div class="feature-box">
+        <i class="fas fa-bolt fa-2x text-warning"></i>
+        <h4>Fast Turnaround</h4>
+        <p>Application to payout within hours.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-shield-alt fa-2x text-success"></i>
+        <h4>Secure & Compliant</h4>
+        <p>Your data is safe. We’re fully compliant with NCR & POPIA.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-hand-holding-usd fa-2x text-primary"></i>
+        <h4>Flexible Repayments</h4>
+        <p>Loan terms from 1 to 12 months. No early settlement penalty.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section bg-white py-5">
+  <div class="container">
+    <div class="row align-items-center gx-5">
+
+      <!-- ICON COLUMN (smaller & aligned) -->
+      <div class="col-md-2 text-center mb-4 mb-md-0">
+        <img
+          src="{{ url_for('static', filename='images/secure-loan.png') }}"
+          alt="Secure Loan"
+          class="img-fluid"
+          style="max-width: 120px;"
+        >
+      </div>
+
+      <!-- CONTENT COLUMN -->
+      <div class="col-md-10 text-start">
+        <h3 class="fw-bold mb-3">We’re Here When You Need Us Most</h3>
+
+        <p class="text-muted">
+          We offer reliable, affordable, and fair short-term loans with
+          100% online processing, transparent terms, and no hidden costs.
+        </p>
+
+        <ul class="list-unstyled text-muted mb-3">
+          <li><i class="fas fa-check text-success me-2"></i> Online application & document upload</li>
+          <li><i class="fas fa-check text-success me-2"></i> Real-time status tracking</li>
+          <li><i class="fas fa-check text-success me-2"></i> Flexible repayment options</li>
+        </ul>
+
+        <a href="{{ url_for('main.calculator') }}" class="btn btn-outline-dark">
+          <i class="fas fa-calculator me-1"></i> Estimate My Loan
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

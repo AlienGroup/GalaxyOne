@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<section class="profile-section py-5">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">My Profile</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <!-- Personal Information Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-user-circle me-2"></i> Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Basic Information Column -->
+                            <div class="col-md-6 border-end">
+                                <h6 class="text-primary mb-3">Basic Information</h6>
+                                <div class="info-item mb-3">
+                                    <strong class="d-block mb-1">First Name:</strong>
+                                    <span class="text-dark">{{ current_user.first_name }}</span>
+                                </div>
+                                <div class="info-item mb-3">
+                                    <strong class="d-block mb-1">Last Name:</strong>
+                                    <span class="text-dark">{{ current_user.last_name }}</span>
+                                </div>
+                                <div class="info-item mb-3">
+                                    <strong class="d-block mb-1">Email:</strong>
+                                    <span class="text-dark">{{ current_user.email }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <strong class="d-block mb-1">Phone:</strong>
+                                    <span class="text-dark">{{ current_user.phone or 'Not provided' }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Address Information Column -->
+                            <div class="col-md-6">
+                                <h6 class="text-primary mb-3">Address Information</h6>
+                                <div class="address-section">
+                                    {% if current_user.address_line1 %}
+                                        <div class="address-display">
+                                            <div class="info-item mb-2">
+                                                <strong class="d-block mb-1">Address Line 1:</strong>
+                                                <span class="text-dark">{{ current_user.address_line1 }}</span>
+                                            </div>
+                                            
+                                            {% if current_user.address_line2 %}
+                                            <div class="info-item mb-2">
+                                                <strong class="d-block mb-1">Address Line 2:</strong>
+                                                <span class="text-dark">{{ current_user.address_line2 }}</span>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <div class="row">
+                                                {% if current_user.suburb %}
+                                                <div class="col-sm-6 info-item mb-2">
+                                                    <strong class="d-block mb-1">Suburb:</strong>
+                                                    <span class="text-dark">{{ current_user.suburb }}</span>
+                                                </div>
+                                                {% endif %}
+                                                
+                                                <div class="col-sm-6 info-item mb-2">
+                                                    <strong class="d-block mb-1">City:</strong>
+                                                    <span class="text-dark">{{ current_user.city or 'Not provided' }}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-6 info-item mb-2">
+                                                    <strong class="d-block mb-1">Postal Code:</strong>
+                                                    <span class="text-dark">{{ current_user.postal_code or 'Not provided' }}</span>
+                                                </div>
+                                                
+                                                <div class="col-sm-6 info-item mb-2">
+                                                    <strong class="d-block mb-1">Country:</strong>
+                                                    <span class="text-dark">{{ current_user.country or 'Not provided' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-map-marker-alt fa-2x text-muted mb-2"></i>
+                                            <p class="text-muted mb-0">No address provided</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pt-4">
+                        <div class="text-center">
+                            <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-edit me-2"></i> Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Summary Card -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-bar me-2"></i> Profile Summary
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card p-3 rounded bg-light">
+                                    <h3 class="text-primary mb-1">{{ current_user.applications|length }}</h3>
+                                    <p class="text-muted mb-0 small">Total Applications</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card p-3 rounded bg-light">
+                                    <h3 class="text-success mb-1">
+                                        {{ current_user.applications|selectattr('status', 'equalto', 'Approved')|list|length }}
+                                    </h3>
+                                    <p class="text-muted mb-0 small">Approved Loans</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card p-3 rounded bg-light">
+                                    <h3 class="text-warning mb-1">
+                                        {{ current_user.applications|selectattr('status', 'equalto', 'Pending')|list|length }}
+                                    </h3>
+                                    <p class="text-muted mb-0 small">Pending Applications</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card p-3 rounded bg-light">
+                                    <h3 class="text-danger mb-1">
+                                        {{ current_user.applications|selectattr('status', 'equalto', 'Declined')|list|length }}
+                                    </h3>
+                                    <p class="text-muted mb-0 small">Declined Applications</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="text-primary mb-3">Quick Actions</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="{{ url_for('main.apply') }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-paper-plane me-1"></i> Apply for Loan
+                                    </a>
+                                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-info">
+                                        <i class="fas fa-tachometer-alt me-1"></i> View Dashboard
+                                    </a>
+                                    {% if current_user.applications %}
+                                    <a href="#applications" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-1"></i> View Applications
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Applications Section (Optional) -->
+                {% if current_user.applications %}
+                <div class="card shadow-sm mt-4" id="applications">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-file-alt me-2"></i> Recent Applications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Reference #</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for app in current_user.applications[-3:]|reverse %}
+                                    <tr>
+                                        <td>{{ app.id }}</td>
+                                        <td>{{ app.date_submitted.strftime('%Y-%m-%d') }}</td>
+                                        <td>R{{ '%.2f' % app.loan_amount }}</td>
+                                        <td>
+                                            {% if app.status == 'Approved' %}
+                                                <span class="badge bg-success">Approved</span>
+                                            {% elif app.status == 'Signed' %}
+                                                <span class="badge bg-primary">Signed</span>
+                                            {% elif app.status == 'Declined' %}
+                                                <span class="badge bg-danger">Declined</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('main.dashboard') }}#collapseApplications" class="btn btn-sm btn-outline-primary">
+                                View All Applications
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.profile-section {
+    min-height: calc(100vh - 200px);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1rem 1.5rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-footer {
+    padding: 0 2rem 2rem 2rem;
+}
+
+.info-item {
+    padding: 0.5rem 0;
+}
+
+.info-item:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-card {
+    transition: transform 0.2s ease;
+    border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.address-display .info-item {
+    border-bottom: none;
+    padding: 0.25rem 0;
+}
+
+.border-end {
+    border-right: 1px solid #e9ecef !important;
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Ensure proper spacing on mobile */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .border-end {
+        border-right: none !important;
+        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    .info-item {
+        padding: 0.75rem 0;
+    }
+}
+
+/* Smooth scrolling for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+</style>
+{% endblock %}

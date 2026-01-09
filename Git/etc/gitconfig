@@ -19,4 +19,4 @@
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [init]
-	defaultBranch = main
+	defaultBranch = gh-pages

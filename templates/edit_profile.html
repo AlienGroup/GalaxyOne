@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<section class="edit-profile-section py-5">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">Edit Profile</h2>
+        <div class="card shadow-sm p-4 bg-white">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <!-- Basic Information Section -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Basic Information</h5>
+                        
+                        <!-- Email Address -->
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label fw-medium") }}
+                            {{ form.email(class="form-control", placeholder="Enter your email address") }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label fw-medium") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">+27</span>
+                                {{ form.phone(class="form-control", placeholder="821234567") }}
+                            </div>
+                            <small class="form-text text-muted">10-digit number without +27 (e.g., 82 123 4567 becomes 821234567)</small>
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3"><i class="fas fa-map-marker-alt me-2"></i>Physical Address</h5>
+                        
+                        <!-- Address Line 1 -->
+                        <div class="mb-3">
+                            {{ form.address_line1.label(class="form-label fw-medium") }}
+                            {{ form.address_line1(class="form-control", placeholder="Street address, P.O. Box, Company name") }}
+                            {% if form.address_line1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.address_line1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Address Line 2 -->
+                        <div class="mb-3">
+                            {{ form.address_line2.label(class="form-label fw-medium") }}
+                            {{ form.address_line2(class="form-control", placeholder="Apartment, suite, unit, building, floor, etc.") }}
+                            {% if form.address_line2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.address_line2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Details Row -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <!-- Suburb -->
+                        <div class="mb-3">
+                            {{ form.suburb.label(class="form-label fw-medium") }}
+                            {{ form.suburb(class="form-control", placeholder="Suburb") }}
+                            {% if form.suburb.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.suburb.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- City -->
+                        <div class="mb-3">
+                            {{ form.city.label(class="form-label fw-medium") }}
+                            {{ form.city(class="form-control", placeholder="City") }}
+                            {% if form.city.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.city.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Postal Code -->
+                        <div class="mb-3">
+                            {{ form.postal_code.label(class="form-label fw-medium") }}
+                            {{ form.postal_code(class="form-control", placeholder="Postal Code") }}
+                            {% if form.postal_code.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.postal_code.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Country -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.country.label(class="form-label fw-medium") }}
+                            {{ form.country(class="form-select") }}
+                            {% if form.country.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.country.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="border-top pt-4 mt-4">
+                    <div class="text-end">
+                        <a href="{{ url_for('main.profile') }}" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> {{ form.submit.label.text or 'Save Changes' }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for phone number formatting -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.getElementById('{{ form.phone.id }}');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/\D/g, '');
+            
+            // Limit to 9 digits (10 including +27)
+            if (this.value.length > 9) {
+                this.value = this.value.slice(0, 9);
+            }
+        });
+    }
+
+    const postalCodeInput = document.getElementById('{{ form.postal_code.id }}');
+    if (postalCodeInput) {
+        postalCodeInput.addEventListener('input', function(e) {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/\D/g, '');
+            
+            // Limit to 4 digits
+            if (this.value.length > 4) {
+                this.value = this.value.slice(0, 4);
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.edit-profile-section .card {
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.form-label.fw-medium {
+    color: #495057;
+    font-weight: 500;
+}
+
+.border-top {
+    border-top: 2px solid #e9ecef !important;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.form-control:invalid, .form-select:invalid {
+    border-color: #dc3545;
+}
+
+.form-control:valid, .form-select:valid {
+    border-color: #28a745;
+}
+</style>
+{% endblock %}

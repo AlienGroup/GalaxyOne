@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Finance Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Loan Finance Management</h2>
+
+<!-- FILTERS -->
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-2">
+    <select name="status" class="form-select">
+      <option value="">All Statuses</option>
+      <option value="Active">Active</option>
+      <option value="Paid">Paid</option>
+      <option value="In Arrears">In Arrears</option>
+      <option value="Pending Release">Pending Release</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <select name="funds" class="form-select">
+      <option value="">Funds (All)</option>
+      <option value="released">Released</option>
+      <option value="pending">Not Released</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <input type="number" name="application_id" class="form-control" placeholder="Application ID">
+  </div>
+
+  <div class="col-md-2">
+    <input type="number" name="user_id" class="form-control" placeholder="User ID">
+  </div>
+
+  <div class="col-md-2">
+    <button class="btn btn-primary w-100">Filter</button>
+  </div>
+
+  <div class="col-md-2">
+    <a href="{{ url_for('admin.finance_dashboard') }}" class="btn btn-secondary w-100">
+      Reset
+    </a>
+  </div>
+</form>
+
+<!-- TABLE -->
+<table class="table table-bordered table-striped">
+  <thead class="table-light">
+    <tr>
+      <th>Application</th>
+      <th>Loan</th>
+      <th>Balance</th>
+      <th>Status</th>
+      <th>Funds</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for loan in loans %}
+    <tr>
+      <td>#{{ loan.application_id }}</td>
+      <td>R{{ "%.2f"|format(loan.loan_amount) }}</td>
+      <td>R{{ "%.2f"|format(loan.balance_remaining) }}</td>
+      <td>
+        {% if loan.status == 'Paid' %}
+          <span class="badge bg-success">Paid</span>
+        {% elif loan.status == 'In Arrears' %}
+          <span class="badge bg-danger">In Arrears</span>
+        {% elif loan.status == 'Pending Release' %}
+          <span class="badge bg-warning text-dark">Pending Release</span>
+        {% else %}
+          <span class="badge bg-primary">Active</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if loan.funds_released %}
+          <span class="badge bg-success">Released</span>
+        {% else %}
+          <span class="badge bg-secondary">Pending</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if loan.status == 'Pending Release' and not loan.funds_released %}
+        <form method="POST" action="{{ url_for('admin.release_funds', finance_id=loan.id) }}">
+          <button class="btn btn-success btn-sm mb-1">Release Funds</button>
+        </form>
+        {% endif %}
+
+        {% if loan.status != 'Paid' %}
+        <form method="POST" action="{{ url_for('admin.record_repayment', finance_id=loan.id) }}" class="mb-1">
+          <input type="number" step="0.01" name="amount" class="form-control mb-1" placeholder="Payment" required>
+          <button class="btn btn-primary btn-sm w-100">Add Payment</button>
+        </form>
+        {% endif %}
+
+        {% if loan.status == 'Active' %}
+        <form method="POST" action="{{ url_for('admin.mark_in_arrears', finance_id=loan.id) }}">
+          <button class="btn btn-warning btn-sm w-100">Mark Arrears</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6" class="text-center text-muted">No records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

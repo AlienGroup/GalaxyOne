@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard - Alien Emergency Fund{% endblock %}
+
+{% block content %}
+<section class="dashboard py-5">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">Welcome, {{ current_user.first_name }}</h2>
+
+        <!-- Accordion Dashboard Layout -->
+        <div class="accordion" id="dashboardAccordion">
+
+            <!-- Personal Details -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingProfile">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="true" aria-controls="collapseProfile">
+                        <i class="fas fa-user-circle me-2"></i> Personal Details
+                    </button>
+                </h2>
+                <div id="collapseProfile" class="accordion-collapse collapse show" aria-labelledby="headingProfile" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <!-- Personal Information in a clean, separated layout -->
+                        <div class="personal-info-container">
+                            <div class="row">
+                                <!-- Basic Info Column -->
+                                <div class="col-lg-5 mb-4">
+                                    <div class="personal-info-section">
+                                        <h6 class="section-title text-primary mb-3">Basic Information</h6>
+                                        <div class="info-item mb-2">
+                                            <strong>Name:</strong><br>
+                                            {{ current_user.first_name }} {{ current_user.last_name }}
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <strong>Email:</strong><br>
+                                            {{ current_user.email }}
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <strong>Phone:</strong><br>
+                                            {{ current_user.phone or 'Not provided' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Address Column -->
+                                <div class="col-lg-7 mb-4">
+                                    <div class="address-section">
+                                        <h6 class="section-title text-primary mb-3">Physical Address</h6>
+                                        {% if current_user.address_line1 %}
+                                            <!-- New Enhanced Address Format -->
+                                            <div class="address-display">
+                                                <div class="address-line mb-1">
+                                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                                                    {{ current_user.address_line1 }}
+                                                </div>
+                                                {% if current_user.address_line2 %}
+                                                    <div class="address-line mb-1 ms-4">
+                                                        {{ current_user.address_line2 }}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="address-area mb-1 ms-4">
+                                                    {% if current_user.suburb %}{{ current_user.suburb }}{% endif %}
+                                                    {% if current_user.city %}, {{ current_user.city }}{% endif %}
+                                                    {% if current_user.postal_code %}, {{ current_user.postal_code }}{% endif %}
+                                                </div>
+                                                {% if current_user.country %}
+                                                    <div class="address-country ms-4">
+                                                        {{ current_user.country }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <div class="text-muted">
+                                                <i class="fas fa-map-marker-alt me-2"></i>
+                                                Not provided
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Edit Profile Button - Separated Row -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="border-top pt-3">
+                                        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary">
+                                            <i class="fas fa-edit me-2"></i> Edit Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# ---commenting out for later automation
+            <!-- Loan Summary -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingLoanSummary">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLoanSummary" aria-expanded="false" aria-controls="collapseLoanSummary">
+                        <i class="fas fa-wallet me-2"></i> Loan Summary
+                    </button>
+                </h2>
+                <div id="collapseLoanSummary" class="accordion-collapse collapse" aria-labelledby="headingLoanSummary" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Total Balance:</strong> R{{ '%.2f' % (current_user.total_balance or 0.00) }}</p>
+                        <p><strong>Amount Due:</strong> R{{ '%.2f' % (current_user.amount_due or 0.00) }}</p>
+                        <p><strong>Due Date:</strong> {{ current_user.due_date.strftime('%Y-%m-%d') if current_user.due_date else 'N/A' }}</p>
+                        <a href="{{ url_for('main.pay_now') }}" class="btn btn-primary">
+                            Pay Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            #}
+
+            <!-- Loan Account (Finance Tracking) -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingLoanAccount">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseLoanAccount"
+                            aria-expanded="false"
+                            aria-controls="collapseLoanAccount">
+                        <i class="fas fa-chart-line me-2"></i> Loan Account
+                    </button>
+                </h2>
+
+                <div id="collapseLoanAccount"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingLoanAccount"
+                     data-bs-parent="#dashboardAccordion">
+
+                    <div class="accordion-body">
+
+                        {% if loan_finance %}
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <strong>Loan Amount:</strong><br>
+                                    R{{ "%.2f"|format(loan_finance.loan_amount) }}
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <strong>Total Repayment:</strong><br>
+                                    R{{ "%.2f"|format(loan_finance.total_repayment) }}
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <strong>Monthly Installment:</strong><br>
+                                    R{{ "%.2f"|format(loan_finance.monthly_installment) }}
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <strong>Amount Paid:</strong><br>
+                                    R{{ "%.2f"|format(loan_finance.amount_paid) }}
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <strong>Balance Remaining:</strong><br>
+                                    R{{ "%.2f"|format(loan_finance.balance_remaining) }}
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <strong>Status:</strong><br>
+                                    {% if loan_finance.status == 'Paid' %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% elif loan_finance.status == 'In Arrears' %}
+                                        <span class="badge bg-danger">In Arrears</span>
+                                    {% else %}
+                                        <span class="badge bg-info">Active</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mt-2">
+                                    <strong>Funds Released:</strong><br>
+                                    {% if loan_finance.funds_released %}
+                                        <span class="badge bg-success">Yes</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        {% else %}
+                            <p class="text-muted">
+                                No active loan account yet.
+                            </p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            {#  ---commenting out for later automation
+            <!-- Transaction History -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTransactions">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTransactions" aria-expanded="false" aria-controls="collapseTransactions">
+                        <i class="fas fa-receipt me-2"></i> Transaction History
+                    </button>
+                </h2>
+                <div id="collapseTransactions" class="accordion-collapse collapse" aria-labelledby="headingTransactions" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        {% if current_user.transactions %}
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Reference</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for txn in current_user.transactions %}
+                                            <tr>
+                                                <td>{{ txn.created_at.strftime('%Y-%m-%d') }}</td>
+                                                <td>{{ txn.reference }}</td>
+                                                <td>R{{ '%.2f' % txn.amount }}</td>
+                                                <td>
+                                                    {% if txn.status == 'Completed' %}
+                                                        <span class="badge bg-success">Completed</span>
+                                                    {% elif txn.status == 'Pending' %}
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">{{ txn.status }}</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-muted">No transaction history yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            #}
+
+            <!-- My Loan Applications -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingApplications">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseApplications" aria-expanded="false" aria-controls="collapseApplications">
+                        <i class="fas fa-file-alt me-2"></i> My Loan Applications
+                    </button>
+                </h2>
+                <div id="collapseApplications" class="accordion-collapse collapse" aria-labelledby="headingApplications" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        {% if current_user.applications %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped align-middle" style="font-size: 0.9rem;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="p-3">Reference #</th>
+                                            <th class="p-3">Date</th>
+                                            <th class="p-3">Amount</th>
+                                            <th class="p-3">Term</th>
+                                            <th class="p-3">Status</th>
+                                            <th class="p-3">Admin Note</th>
+                                            <th class="p-3">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for app in current_user.applications %}
+                                            <tr class="admin-note-row">
+                                                <td class="p-3">{{ app.id }}</td>
+                                                <td class="p-3">{{ app.date_submitted.strftime('%Y-%m-%d') }}</td>
+                                                <td class="p-3">R{{ '%.2f' % app.loan_amount }}</td>
+                                                <td class="p-3">{{ app.loan_term }} months</td>
+                                                <td class="p-3">
+                                                    {% if app.status == 'Approved' %}
+                                                        <span class="badge bg-success">Approved</span>
+                                                    {% elif app.status == 'Signed' %}
+                                                        <span class="badge bg-primary">Signed</span>
+                                                    {% elif app.status == 'Declined' %}
+                                                        <span class="badge bg-danger">Declined</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning text-dark">In Review</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="p-3 admin-note-cell">
+                                                    {% set admin_note = app.admin_note %}
+                                                    {% if admin_note %}
+                                                        <div class="admin-note-container">
+                                                            <button type="button" class="btn btn-sm btn-outline-info view-note-btn" 
+                                                                    data-app-id="{{ app.id }}"
+                                                                    data-admin-note="{{ admin_note }}">
+                                                                View Note
+                                                            </button>
+                                                            <div class="thinking-bubble" id="bubble-{{ app.id }}">
+                                                                <div class="bubble-content">
+                                                                    <div class="bubble-header">
+                                                                        <strong>Admin Feedback</strong>
+                                                                        <button type="button" class="btn-close bubble-close" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="bubble-body">
+                                                                        {{ admin_note }}
+                                                                    </div>
+                                                                    <div class="bubble-arrow"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="p-3">
+                                                    {% if app.status == 'Approved' %}
+                                                        <a href="{{ url_for('main.sign_contract', app_id=app.id) }}" class="btn btn-sm btn-primary">Sign Contract</a>
+                                                    {% elif app.status == 'Declined' %}
+                                                        <a href="{{ url_for('main.apply') }}" class="btn btn-sm btn-outline-dark">Re-Apply</a>
+                                                    {% elif app.status == 'Signed' %}
+                                                        <span class="text-success">Complete</span>
+                                                    {% else %}
+                                                        <span class="text-muted">Pending</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                        <div class="loan-cta-wrapper text-center mt-4">
+                            <div class="alert alert-info w-100 mb-3">
+                                You haven't submitted any loan applications yet.
+                            </div>
+                            <br>
+                            <a href="{{ url_for('main.apply') }}" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i> Apply for a Loan
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle thinking bubble toggle
+    const viewNoteButtons = document.querySelectorAll('.view-note-btn');
+    const bubbleCloseButtons = document.querySelectorAll('.bubble-close');
+    
+    viewNoteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const appId = this.getAttribute('data-app-id');
+            const bubble = document.getElementById(`bubble-${appId}`);
+            
+            // Hide all other bubbles first
+            document.querySelectorAll('.thinking-bubble').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Toggle current bubble
+            bubble.classList.toggle('active');
+        });
+    });
+    
+    bubbleCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const bubble = this.closest('.thinking-bubble');
+            bubble.classList.remove('active');
+        });
+    });
+    
+    // Close bubbles when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.admin-note-container')) {
+            document.querySelectorAll('.thinking-bubble').forEach(bubble => {
+                bubble.classList.remove('active');
+            });
+        }
+    });
+});
+</script>
+
+<style>
+/* Improved table spacing */
+.table td.p-3 {
+    padding: 0.75rem !important;
+}
+
+.table th.p-3 {
+    padding: 0.75rem !important;
+}
+
+/* Personal Details Styling */
+.personal-info-container {
+    padding: 0;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid #fd7e14;
+    padding-bottom: 0.5rem;
+}
+
+.personal-info-section, .address-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    height: 100%;
+}
+
+.info-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.address-display {
+    line-height: 1.6;
+}
+
+.address-line {
+    font-weight: 500;
+}
+
+.address-area {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.address-country {
+    color: #495057;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+/* Ensure proper spacing between sections */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Button container with top border */
+.border-top {
+    border-top: 2px solid #dee2e6 !important;
+}
+
+.pt-3 {
+    padding-top: 1rem !important;
+}
+
+/* Thinking Bubble Styles */
+.admin-note-container {
+    position: relative;
+    display: inline-block;
+}
+
+.thinking-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: white;
+    border: 2px solid #0dcaf0;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
+    min-width: 300px;
+    max-width: 400px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.thinking-bubble.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.bubble-content {
+    position: relative;
+    padding: 0;
+}
+
+.bubble-header {
+    background: #0dcaf0;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.bubble-close {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.8;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.bubble-close:hover {
+    opacity: 1;
+}
+
+.bubble-body {
+    padding: 15px;
+    background: white;
+    border-radius: 0 0 10px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.bubble-arrow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #0dcaf0;
+}
+
+/* Ensure the table row has relative positioning for the bubble */
+.admin-note-row {
+    position: relative;
+}
+
+.admin-note-cell {
+    position: relative;
+}
+
+/* Make sure the bubble appears above other content */
+.thinking-bubble {
+    z-index: 1060;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .thinking-bubble {
+        min-width: 280px;
+        max-width: 300px;
+        left: 0;
+        transform: translateX(0) translateY(-10px);
+    }
+    
+    .thinking-bubble.active {
+        transform: translateX(0) translateY(-5px);
+    }
+    
+    .bubble-arrow {
+        left: 20px;
+        transform: translateX(0);
+    }
+}
+</style>
+{% endblock %}

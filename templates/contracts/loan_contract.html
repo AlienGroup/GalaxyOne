@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <style>
+        @page {
+            margin: 2cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .section {
+            margin-top: 18px;
+        }
+
+        .small {
+            font-size: 10px;
+            color: #555;
+        }
+
+        .contract-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SIGNED WATERMARK */
+        .watermark {
+            position: fixed;
+            top: 35%;
+            left: 10%;
+            width: 80%;
+            text-align: center;
+            transform: rotate(-30deg);
+            font-size: 90px;
+            color: rgba(0, 0, 0, 0.08);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table td {
+            padding: 6px;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- WATERMARK -->
+<div class="watermark">
+    SIGNED<br>
+    {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
+    IP: {{ application.signed_ip }}
+</div>
+
+<div class="contract-content">
+
+<h1>Loan Agreement</h1>
+<h2>Alien Emergency Fund (Pty) Ltd</h2>
+
+<div class="section">
+    <strong>Applicant Details</strong>
+    <table>
+        <tr><td><strong>Full Name:</strong></td><td>{{ application.full_name }}</td></tr>
+        <tr><td><strong>ID Number:</strong></td><td>{{ application.id_number }}</td></tr>
+        <tr><td><strong>Email:</strong></td><td>{{ application.email }}</td></tr>
+        <tr><td><strong>Contact Number:</strong></td><td>{{ application.phone }}</td></tr>
+        <tr><td><strong>Residential Address:</strong></td><td>{{ application.full_address }}</td></tr>
+    </table>
+</div>
+
+<h3>1. Credit Provider Disclosure</h3>
+<p>
+Alien Emergency Fund (Pty) Ltd is a registered credit provider in terms of the
+National Credit Act 34 of 2005.
+</p>
+<ul>
+    <li><strong>NCR Registration Number:</strong> NCRCP12345</li>
+    <li><strong>Registered Address:</strong> 123 Main Road, Elliotdale, South Africa</li>
+</ul>
+
+<h3>2. Loan Summary</h3>
+<table>
+    <tr><td><strong>Loan Amount:</strong></td><td>R{{ '%.2f' % application.loan_amount }}</td></tr>
+    <tr><td><strong>Interest Rate:</strong></td><td>{{ (application.interest_rate * 100)|round(2) }}% per annum (fixed)</td></tr>
+    <tr><td><strong>Loan Term:</strong></td><td>{{ application.loan_term }} months</td></tr>
+    <tr><td><strong>Total Repayment:</strong></td><td>R{{ '%.2f' % total_payment }}</td></tr>
+    <tr><td><strong>Monthly Instalment:</strong></td><td>R{{ '%.2f' % monthly_payment }}</td></tr>
+</table>
+
+<h3>3. Disbursement of Funds</h3>
+<p>
+Funds will be paid into the bank account provided by the Consumer during the
+application process and verified through submitted bank statements.
+</p>
+<p>
+Disbursement will occur within <strong>1–2 business days</strong> after successful
+signing and final verification.
+</p>
+
+<h3>4. Consumer Rights (National Credit Act)</h3>
+<ul>
+    <li>The right to receive a copy of this agreement</li>
+    <li>The right to settle the loan early</li>
+    <li>The right to request statements of account</li>
+    <li>The right to apply for debt review if financially distressed</li>
+</ul>
+
+<h3>5. Default and Legal Consequences</h3>
+<p>
+Failure to make payment on the agreed due date may result in additional
+interest, collection costs, negative credit bureau reporting, and legal action
+in accordance with the National Credit Act.
+</p>
+
+<h3>6. Protection of Personal Information (POPIA)</h3>
+<p>
+Personal information is processed lawfully and securely in accordance with the
+Protection of Personal Information Act. Information is used solely for credit
+assessment, administration, compliance, and reporting where required.
+</p>
+
+<h3>7. Bank Details for Repayment</h3>
+<p>
+<strong>(To be confirmed by Credit Provider)</strong>
+</p>
+<ul>
+    <li><strong>Bank Name:</strong> ________________________</li>
+    <li><strong>Account Holder:</strong> ________________________</li>
+    <li><strong>Account Number:</strong> ________________________</li>
+    <li><strong>Branch Code:</strong> ________________________</li>
+    <li><strong>Reference:</strong> Application ID {{ application.id }}</li>
+</ul>
+
+<h3>8. Contact Details</h3>
+<ul>
+    <li><strong>Email:</strong> alienemergencyfund@gmail.com</li>
+    <li><strong>Office Hours:</strong> Monday – Friday, 08:00 – 17:00</li>
+</ul>
+
+<h3>9. Electronic Signature</h3>
+<p>
+By electronically accepting this agreement, the Consumer acknowledges that
+this constitutes a legally binding electronic signature in accordance with the
+Electronic Communications and Transactions Act 25 of 2002.
+</p>
+
+<div class="section">
+    <strong>Signed by Applicant</strong><br>
+    Date Signed: {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
+    IP Address: {{ application.signed_ip }}
+</div>
+
+<div class="section small">
+    Alien Emergency Fund (Pty) Ltd • NCR & POPIA Compliant
+</div>
+
+</div>
+</body>
+</html>

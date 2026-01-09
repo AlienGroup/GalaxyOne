@@ -437,9 +437,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article">
 <div id="header">
 <h1>Path-Walk API</h1>
-<div class="details">
-<span id="revdate">2018-06-07</span>
-</div>
 </div>
 <div id="content">
 <div id="preamble">
@@ -455,12 +452,6 @@ blobs reachable via a path <code>my/dir/to/A</code> are visited. When there are
 multiple paths possible to reach the same object, then only one of those
 paths is used to visit the object.</p>
 </div>
-<div class="paragraph">
-<p>When walking a range of commits with some <code>UNINTERESTING</code> objects, the
-objects with the <code>UNINTERESTING</code> flag are included in these batches. In
-order to walk <code>UNINTERESTING</code> objects, the <code>--boundary</code> option must be
-used in the commit walk in order to visit <code>UNINTERESTING</code> commits.</p>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -468,7 +459,7 @@ used in the commit walk in order to visit <code>UNINTERESTING</code> commits.</p
 <div class="sectionbody">
 <div class="paragraph">
 <p>To use the path-walk API, include <code>path-walk.h</code> and call
-<code>walk_objects_by_path()</code> with a customized <code>path_walk_info</code> struct. The
+<code>walk_objects_by_path</code>() with a customized <code>path_walk_info</code> struct. The
 struct is used to set all of the options for how the walk should proceed.
 Let&#8217;s dig into the different options and their use.</p>
 </div>
@@ -488,22 +479,20 @@ this callback function.</p>
 <p>To configure the exact details of the reachable set of objects,
 use the <code>revs</code> member and initialize it using the revision
 machinery in <code>revision.h</code>. Initialize <code>revs</code> using calls such as
-<code>setup_revisions()</code> or <code>parse_revision_opt()</code>. Do not call
-<code>prepare_revision_walk()</code>, as that will be called within
-<code>walk_objects_by_path()</code>.</p>
+<code>setup_revisions</code>() or <code>parse_revision_opt</code>(). Do not call
+<code>prepare_revision_walk</code>(), as that will be called within
+<code>walk_objects_by_path</code>().</p>
 <div class="paragraph">
 <p>It is also important that you do not specify the <code>--objects</code> flag for the
 <code>revs</code> struct. The revision walk should only be used to walk commits, and
 the objects will be walked in a separate way based on those starting
 commits.</p>
 </div>
-<div class="paragraph">
-<p>If you want the path-walk API to emit <code>UNINTERESTING</code> objects based on the
-commit walk&#8217;s boundary, be sure to set <code>revs.boundary</code> so the boundary
-commits are emitted.</p>
-</div>
 </dd>
-<dt class="hdlist1"><code>commits</code>, <code>blobs</code>, <code>trees</code>, <code>tags</code></dt>
+<dt class="hdlist1"><code>commits</code></dt>
+<dt class="hdlist1"><code>blobs</code></dt>
+<dt class="hdlist1"><code>trees</code></dt>
+<dt class="hdlist1"><code>tags</code></dt>
 <dd>
 <p>By default, these members are enabled and signal that the path-walk
 API should call the <code>path_fn</code> on objects of these types. Specialized
@@ -522,6 +511,15 @@ interested in paths where all included objects are marked with the
 <code>UNINTERESTING</code> flag. This requires using the <code>boundary</code> option in
 the revision walk so that the walk emits commits marked with the
 <code>UNINTERESTING</code> flag.</p>
+</dd>
+<dt class="hdlist1"><code>edge_aggressive</code></dt>
+<dd>
+<p>For performance reasons, usually only the boundary commits are
+explored to find UNINTERESTING objects. However, in the case of
+shallow clones it can be helpful to mark all trees and blobs
+reachable from UNINTERESTING tip commits as UNINTERESTING. This
+matches the behavior of <code>--objects-edge-aggressive</code> in the
+revision API.</p>
 </dd>
 <dt class="hdlist1"><code>pl</code></dt>
 <dd>
@@ -542,15 +540,15 @@ API can prune the set of paths it walks to improve performance.</p>
 <div class="paragraph">
 <p>See example usages in:
 	<code>t/helper/test-path-walk.c</code>,
-	<code>builtin/backfill.c</code>,
-	<code>builtin/pack-objects.c</code></p>
+	<code>builtin/pack-objects.c</code>,
+	<code>builtin/backfill.c</code></p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-25 12:16:31 UTC
+Last updated 2025-11-17 18:25:15 UTC
 </div>
 </div>
 </body>

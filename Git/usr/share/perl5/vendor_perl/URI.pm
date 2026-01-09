@@ -3,7 +3,7 @@ package URI;
 use strict;
 use warnings;
 
-our $VERSION = '5.29';
+our $VERSION = '5.34';
 
 # 1=version 5.10 and earlier; 0=version 5.11 and later
 use constant HAS_RESERVED_SQUARE_BRACKETS => $ENV{URI_HAS_RESERVED_SQUARE_BRACKETS} ? 1 : 0;
@@ -28,7 +28,7 @@ our $schemes_without_host_part_re = 'data|ldapi|urn|sqlite|sqlite3';
 
 # These schemes can have an IPv6+ authority part:
 #     file, ftp, gopher, http, https, ldap, ldaps, mms, news, nntp, nntps, pop, rlogin, rtsp, rtspu, rsync, sip, sips, snews,
-#     telnet, tn3270, ssh, sftp
+#     smtp, telnet, tn3270, ssh, sftp
 #     (all DB URIs, i.e. cassandra, couch, couchdb, etc.), except 'sqlite:', 'sqlite3:'. Others?
 #MAINT: URI has no test coverage for DB schemes
 #MAINT: decoupling - perhaps let each class decide itself by defining a member function 'scheme_has_authority_part()'?
@@ -970,10 +970,13 @@ C<URI> objects belonging to the ftp scheme support the common,
 generic and server methods.  In addition, they provide two methods for
 accessing the userinfo sub-components: $uri->user and $uri->password.
 
+It also supports accessing to the encryption mode ($uri->encrypt_mode),
+which has its own defaults for I<ftps> and I<ftpes> URI schemes.
+
 =item B<gopher>:
 
 The I<gopher> URI scheme is specified in
-<draft-murali-url-gopher-1996-12-04> and will hopefully be available
+C<draft-murali-url-gopher-1996-12-04> and will hopefully be available
 as a RFC 2396 based specification.
 
 C<URI> objects belonging to the gopher scheme support the common,
@@ -1019,6 +1022,15 @@ The I<icaps> URI scheme is specified in L<RFC 3507|http://tools.ietf.org/html/rf
 The scheme is used to reference ICAP servers through SSL
 connections.  Its syntax is the same as icap, including the same
 default port.
+
+=item B<irc>:
+
+The I<irc> URI scheme is specified in L<draft-butcher-irc-url-04|https://datatracker.ietf.org/doc/html/draft-butcher-irc-url-04>.
+The scheme is used to reference IRC servers and their resources.
+
+C<URI> objects belonging to the irc or ircs scheme support login
+methods, and the following IRC-specific ones: $uri->entity,
+$uri->flags, $uri->options.
 
 =item B<ldap>:
 
@@ -1100,8 +1112,8 @@ The I<pop> URI scheme is specified in RFC 2384. The scheme is used to
 reference a POP3 mailbox.
 
 C<URI> objects belonging to the pop scheme support the common, generic
-and server methods.  In addition, they provide two methods to access the
-userinfo components: $uri->user and $uri->auth
+and server methods, as well as two email authorization methods:
+C<user> and C<auth>.
 
 =item B<rlogin>:
 
@@ -1140,6 +1152,22 @@ I<sip> parameters: $uri->params_form and $uri->params.
 
 See I<sip> scheme.  Its syntax is the same as sip, but the default
 port is different.
+
+=item B<smb>:
+
+C<URI> objects belonging to the smb scheme support the common,
+generic and server methods. In addition, they provide methods to
+access the userinfo sub-components ($uri->user and $uri->password)
+as well as $uri->authdomain and $uri->sharename methods.
+
+=item B<smtp>:
+
+The I<smtp> URI scheme is specified in L<draft-earhart-url-smtp-00|https://datatracker.ietf.org/doc/html/draft-earhart-url-smtp-00>.
+The scheme is used to reference a SMTP server.
+
+C<URI> objects belonging to the smtp scheme support the common, generic
+and server methods, as well as two email authorization methods:
+C<user> and C<auth>.
 
 =item B<snews>:
 
@@ -1203,6 +1231,18 @@ described in RFC 3061.  An object identifier consists of sequences of digits
 separated by dots.  A C<URI> object belonging to this namespace has an
 additional method called $uri->oid that can be used to get/set the oid
 value.  In a list context, oid numbers are returned as separate elements.
+
+=item B<ws>:
+
+The <ws> URI scheme is specified in L<RFC 6455|http://tools.ietf.org/html/rfc6455>.
+The C<WebSocket> Protocol enables two-way communication between a client
+running untrusted code in a controlled environment to a remote host
+that has opted-in to communications from that code.
+
+=item B<wss>:
+
+The I<wss> URI scheme is specified in L<RFC 6455|http://tools.ietf.org/html/rfc6455> as well.
+The scheme is used to reference C<WebSocket> servers through SSL connections.
 
 =back
 

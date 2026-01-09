@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - Alien Emergency Fund{% endblock %}
+{% block content %}
+<section class="admin-dashboard py-4">
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">Admin Dashboard</h2>
+
+        <!-- Statistics Overview -->
+        <div class="stats-card mb-5">
+            <div class="row g-4">
+                <div class="col-md-2 col-6">
+                    <div class="card text-center bg-light">
+                        <div class="card-body">
+                            <h3 class="text-primary">{{ total }}</h3>
+                            <p class="mb-0">Total Applications</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <div class="card text-center bg-warning bg-opacity-10">
+                        <div class="card-body">
+                            <h3 class="text-warning">{{ pending }}</h3>
+                            <p class="mb-0">Pending</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <div class="card text-center bg-success bg-opacity-10">
+                        <div class="card-body">
+                            <h3 class="text-success">{{ approved }}</h3>
+                            <p class="mb-0">Approved</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <div class="card text-center bg-info bg-opacity-10">
+                        <div class="card-body">
+                            <h3 class="text-info">{{ signed }}</h3>
+                            <p class="mb-0">Signed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <div class="card text-center bg-danger bg-opacity-10">
+                        <div class="card-body">
+                            <h3 class="text-danger">{{ declined }}</h3>
+                            <p class="mb-0">Declined</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Actions -->
+        <div class="admin-actions mb-4">
+            <a href="{{ url_for('admin.list_applications', status='Pending') }}" class="btn btn-primary">
+                <i class="fas fa-clock me-2"></i>View Pending Applications
+            </a>
+            <a href="{{ url_for('admin.list_applications') }}" class="btn btn-secondary">
+                <i class="fas fa-list me-2"></i>View All Applications
+            </a>
+            <a href="{{ url_for('admin.finance_dashboard') }}" class="btn btn-success">
+                <i class="fas fa-money-bill-wave me-2"></i>Manage Loan Finances
+            </a>
+        </div>
+
+        <!-- Recent Applications Preview -->
+        {% if recent_applications %}
+        <div class="recent-applications mt-5">
+            <h4 class="mb-3">Recent Applications</h4>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>App ID</th>
+                                    <th>Applicant Name</th>
+                                    <th>ID Number</th>
+                                    <th>Email</th>
+                                    <th>Loan Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in recent_applications %}
+                                <tr>
+                                    <td><strong>#{{ app.id }}</strong></td>
+                                    <td>
+                                        {# Fallback for full_name field #}
+                                        {% if app.full_name %}
+                                            {{ app.full_name }}
+                                        {% elif app.user %}
+                                            {{ app.user.first_name }} {{ app.user.last_name }}
+                                        {% else %}
+                                            <span class="text-muted">Not provided</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {# Fallback for id_number field #}
+                                        {% if app.id_number %}
+                                            {{ app.id_number }}
+                                        {% else %}
+                                            <span class="text-muted">Not provided</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {# Fallback for email field #}
+                                        {% if app.email %}
+                                            {{ app.email }}
+                                        {% elif app.user %}
+                                            {{ app.user.email }}
+                                        {% else %}
+                                            <span class="text-muted">Not provided</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {# Fallback for loan_amount field #}
+                                        {% if app.loan_amount %}
+                                            R{{ "%.2f"|format(app.loan_amount) }}
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if app.status == 'Pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif app.status == 'Approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% elif app.status == 'Signed' %}
+                                            <span class="badge bg-primary">Signed</span>
+                                        {% elif app.status == 'Declined' %}
+                                            <span class="badge bg-danger">Declined</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ app.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {# Fallback for date_submitted field #}
+                                        {% if app.date_submitted %}
+                                            {{ app.date_submitted.strftime('%Y-%m-%d') }}
+                                        {% elif app.created_at %}
+                                            {{ app.created_at.strftime('%Y-%m-%d') }}
+                                        {% else %}
+                                            <span class="text-muted">Unknown</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin.application_details', app_id=app.id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.admin-dashboard {
+    background-color: #f8f9fa;
+}
+
+.stats-card .card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+.stats-card .card:hover {
+    transform: translateY(-2px);
+}
+
+.stats-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.stats-card p {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.recent-applications .table {
+    margin-bottom: 0;
+}
+
+.recent-applications .table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.text-muted {
+    color: #6c757d !important;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .admin-actions {
+        flex-direction: column;
+    }
+    
+    .admin-actions .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-card .col-md-2 {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
