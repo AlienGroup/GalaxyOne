@@ -8,10 +8,17 @@ class Config:
     # =========================
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL',
+    # =========================
+    # Database Configuration
+    # =========================
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+
+    if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
-    )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # =========================
@@ -22,27 +29,22 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 
-    # IMPORTANT:
-    # These must be REAL VALUES, not os.environ.get(<email>)
     MAIL_USERNAME = 'alienemergencyfund@gmail.com'
     MAIL_PASSWORD = 'prbheqvherstlbld'  # Gmail App Password
 
-    # Always define a default sender explicitly
     MAIL_DEFAULT_SENDER = ('Alien Emergency Fund', MAIL_USERNAME)
-
-    # Admin notifications
     ADMIN_EMAIL = 'alienemergencyfund@gmail.com'
 
     # =========================
     # File Upload Configuration
     # =========================
     UPLOAD_FOLDER = os.path.join(basedir, 'uploads')
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB per request
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
 
     # =========================
     # Loan Configuration
     # =========================
-    INTEREST_RATE = float(os.environ.get('INTEREST_RATE', 0.12))  # 12% annual interest
+    INTEREST_RATE = float(os.environ.get('INTEREST_RATE', 0.12))
 
     # =========================
     # reCAPTCHA Configuration
