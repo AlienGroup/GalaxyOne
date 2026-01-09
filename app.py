@@ -8,7 +8,7 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
-    migrate.init_app(app, db)  # ✅ Needed for flask db commands
+    migrate.init_app(app, db)
     mail.init_app(app)
     login_manager.init_app(app)
     limiter.init_app(app)
@@ -20,5 +20,9 @@ def create_app():
 
     return app
 
-# This exposes the app instance for Flask CLI (e.g., flask db migrate)
+# Expose app for Flask CLI and WSGI servers (Render, Gunicorn)
 app = create_app()
+
+# Allow running locally: python app.py
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
