@@ -8,18 +8,16 @@ class Config:
     # =========================
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-    # =========================
-    # Database Configuration
-    # =========================
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-
-    if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-    SQLALCHEMY_DATABASE_URI = DATABASE_URL or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
-
+    # IMPORTANT:
+    # Use instance/app.db so Flask-Migrate + Render work correctly
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL',
+        'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Ensure instance folder exists
+    INSTANCE_PATH = os.path.join(basedir, 'instance')
 
     # =========================
     # Flask-Mail Configuration
@@ -29,11 +27,24 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 
-    MAIL_USERNAME = 'alienemergencyfund@gmail.com'
-    MAIL_PASSWORD = 'prbheqvherstlbld'  # Gmail App Password
+    MAIL_USERNAME = os.environ.get(
+        'MAIL_USERNAME',
+        'alienemergencyfund@gmail.com'
+    )
+    MAIL_PASSWORD = os.environ.get(
+        'MAIL_PASSWORD',
+        'prbheqvherstlbld'
+    )
 
     MAIL_DEFAULT_SENDER = ('Alien Emergency Fund', MAIL_USERNAME)
-    ADMIN_EMAIL = 'alienemergencyfund@gmail.com'
+
+    # =========================
+    # Admin Notifications
+    # =========================
+    ADMIN_EMAIL = os.environ.get(
+        'ADMIN_EMAIL',
+        'alienemergencyfund@gmail.com'
+    )
 
     # =========================
     # File Upload Configuration
@@ -44,16 +55,16 @@ class Config:
     # =========================
     # Loan Configuration
     # =========================
-    INTEREST_RATE = float(os.environ.get('INTEREST_RATE', 0.12))
+    INTEREST_RATE = float(os.environ.get('INTEREST_RATE', 0.12))  # 12%
 
     # =========================
     # reCAPTCHA Configuration
     # =========================
-    RECAPTCHA_PUBLIC_KEY = os.getenv(
+    RECAPTCHA_PUBLIC_KEY = os.environ.get(
         'RECAPTCHA_PUBLIC_KEY',
         '6LfVbjsrAAAAAK7SzEAyo5cZ3KpIhjxLv3_QtTI9'
     )
-    RECAPTCHA_PRIVATE_KEY = os.getenv(
+    RECAPTCHA_PRIVATE_KEY = os.environ.get(
         'RECAPTCHA_PRIVATE_KEY',
         '6LfVbjsrAAAAACNCghqacyyWYRghSbv93z2J8LVN'
     )
@@ -76,4 +87,3 @@ class Config:
         'PAYFAST_NOTIFY_URL',
         'http://localhost:5000/payment-notify'
     )
-
