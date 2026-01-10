@@ -1,28 +1,19 @@
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-
-# Virtual environment
+.env
 venv/
-.env/
-.flaskenv/
+.env.*
 
-# Database
-*.db
-*.sqlite3
-
-# Uploads (user documents, contracts)
+# Flask
+instance/
 uploads/
 
-# Logs
-*.log
-
-# OS files
-.DS_Store.gitignore
+# OS
+.DS_Store
 Thumbs.db
 
-# IDE
-.vscode/
-.idea/
+# SQLite (local only)
+*.db
