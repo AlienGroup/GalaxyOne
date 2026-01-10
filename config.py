@@ -1,4 +1,5 @@
 import os
+import re
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -10,23 +11,25 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
     # =========================
-    # Database Configuration
+    # Database Configuration - FIXED
     # =========================
-    # ALWAYS store SQLite DB in instance folder
     DATABASE_URL = os.environ.get("DATABASE_URL")
-
-    if DATABASE_URL and DATABASE_URL.startswith("postgres"):
+    
+    if DATABASE_URL:
+        # Handle both 'postgres://' and 'postgresql://' URLs
+        # Heroku/Render sometimes use 'postgres://', SQLAlchemy needs 'postgresql://'
+        if DATABASE_URL.startswith('postgres://'):
+            DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+        
+        # Use PostgreSQL if DATABASE_URL is provided
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        print(f"Using PostgreSQL database: {DATABASE_URL[:50]}...")  # Debug logging
     else:
+        # Fallback to SQLite for local development
         SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "instance", "app.db")
-
+        print("Using SQLite database for local development")
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # =========================
-    # Ensure instance folder exists
-    # =========================
-    INSTANCE_PATH = os.path.join(basedir, "instance")
-    os.makedirs(INSTANCE_PATH, exist_ok=True)
 
     # =========================
     # Flask-Mail Configuration
@@ -42,7 +45,7 @@ class Config:
     )
     MAIL_PASSWORD = os.environ.get(
         "MAIL_PASSWORD",
-        "prbheqvherstlbld"
+        "hqoz jlrv qqci jcqm"
     )
 
     MAIL_DEFAULT_SENDER = ("Alien Emergency Fund", MAIL_USERNAME)
