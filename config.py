@@ -15,12 +15,10 @@ class Config:
     # ALWAYS store SQLite DB in instance folder
     DATABASE_URL = os.environ.get("DATABASE_URL")
 
-    if DATABASE_URL:
-        # Render / Production
+    if DATABASE_URL and DATABASE_URL.startswith("postgres"):
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
     else:
-        # Local development
-        SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(basedir, 'instance', 'app.db')}"
+        SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "instance", "app.db")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
