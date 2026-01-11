@@ -93,19 +93,6 @@ body.dark-mode .alert-info {
   background-color: var(--primary-dark);
 }
 
-/* Existing Styles — Kept Unchanged... (trimmed for brevity) */
-/* Keep all your original layout styles here, including header, footer, nav, buttons, etc. */
-/* Example continuation: */
-
-.strip-section {
-  background-color: #eee;
-  padding: 8px 0;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--dark);
-}
-/* ... (continue with your previous content from here unchanged) */
-
 /* Compliance Strip */
 .strip-section {
   background-color: #eee;
@@ -424,26 +411,6 @@ body.dark-mode .alert-info {
   background-color: var(--primary-dark);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .features-row {
-    flex-direction: column;
-  }
-
-  .footer-grid {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .footer-section {
-    text-align: center;
-  }
-
   /* Auth Pages (Login, Register, Forgot Password) */
 .auth-container {
   display: flex;
@@ -554,16 +521,6 @@ body.dark-mode .alert-info {
   margin-bottom: 1.25rem;
 }
 
-@media (max-width: 768px) {
-  .accordion-button {
-    font-size: 0.95rem;
-  }
-  .dashboard .accordion-body .btn {
-    width: 100%;
-    display: block;
-    margin-top: 10px;
-  }
-
 .loan-cta-wrapper {
   margin-top: 1.5rem;
   display: flex;
@@ -628,31 +585,47 @@ body.dark-mode .alert-info {
 /* ===================================================== */
 @media (max-width: 768px) {
 
+  /* Prevent sideways page scroll (NOT nav scroll) */
   html, body {
     width: 100%;
     overflow-x: hidden;
   }
 
-  /* HEADER OFFSET (matches real header height) */
+  /* Header spacing (matches real stacked header height) */
   body {
     padding-top: 140px;
   }
 
+  /* Header layout */
   .header-content {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  /* Horizontal scroll nav */
+  /* ================= NAV (HORIZONTAL + SCROLLABLE) ================= */
+
+ .main-nav {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .main-nav ul {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+
     gap: 14px;
+    padding: 8px 12px;
+    margin: 0;
+
+    width: max-content;
+    min-width: 100%;
+
     overflow-x: auto;
     white-space: nowrap;
-    width: 100%;
-    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .main-nav ul::-webkit-scrollbar {
@@ -660,12 +633,15 @@ body.dark-mode .alert-info {
   }
 
   .nav-link {
+    white-space: nowrap;
+    flex-shrink: 0;
     font-size: 0.95rem;
     padding: 6px 10px;
     border-bottom: none;
   }
 
-  /* HERO */
+  /* ================= HERO ================= */
+
   .hero-section {
     padding: 80px 15px 60px;
   }
@@ -674,7 +650,8 @@ body.dark-mode .alert-info {
     font-size: 2rem;
   }
 
-  /* WHY CHOOSE US */
+  /* ================= WHY CHOOSE US ================= */
+
   .features-row {
     display: grid;
     grid-template-columns: 1fr;
@@ -689,22 +666,43 @@ body.dark-mode .alert-info {
     margin: 0 auto;
   }
 
-  /* FORMS */
+  /* ================= FORMS ================= */
+
   .form-container,
   .auth-card {
     width: 100%;
     max-width: 100%;
     margin: 0 auto 80px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  /* FOOTER */
+  /* ================= DASHBOARD ================= */
+
+  .accordion-button {
+    font-size: 0.95rem;
+  }
+
+  .dashboard .accordion-body .btn {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+  }
+
+  /* ================= FOOTER ================= */
+
   .footer-grid {
     flex-direction: column;
     text-align: center;
     gap: 15px;
   }
 
-  /* DARK MODE BUTTON */
+  .footer-section {
+    text-align: center;
+  }
+
+  /* ================= DARK MODE BUTTON ================= */
+
   .dark-toggle-btn {
     bottom: 16px;
     right: 16px;
