@@ -24,6 +24,11 @@ body {
   transition: background-color var(--transition), color var(--transition);
 }
 
+/* Global box sizing (prevents layout overflow) */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Dark Mode Support */
 body.dark-mode {
   background-color: #121212;
@@ -426,12 +431,6 @@ body.dark-mode .alert-info {
     align-items: flex-start;
   }
 
-  .main-nav ul {
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
   .features-row {
     flex-direction: column;
   }
@@ -624,66 +623,90 @@ body.dark-mode .alert-info {
     transform: translateY(-2px);
 }
 
-/* ===================================== */
-/* FINAL MOBILE CONTENT FIX (NO OVERFLOW) */
-/* ===================================== */
-
+/* ===================================================== */
+/* SINGLE SOURCE OF TRUTH — MOBILE LAYOUT (FINAL) */
+/* ===================================================== */
 @media (max-width: 768px) {
 
-  /* Kill ALL horizontal overflow globally */
   html, body {
-    max-width: 100%;
-    overflow-x: hidden !important;
-  }
-
-  /* Ensure all sections fit screen */
-  section,
-  .main-content,
-  .hero-section,
-  .why-choose-section,
-  .about-section,
-  .form-container {
     width: 100%;
-    max-width: 100%;
     overflow-x: hidden;
   }
 
-  /* ================= WHY CHOOSE US FIX ================= */
+  /* HEADER OFFSET (matches real header height) */
+  body {
+    padding-top: 140px;
+  }
 
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Horizontal scroll nav */
+  .main-nav ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    padding-bottom: 6px;
+  }
+
+  .main-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+    border-bottom: none;
+  }
+
+  /* HERO */
+  .hero-section {
+    padding: 80px 15px 60px;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  /* WHY CHOOSE US */
   .features-row {
     display: grid;
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
     gap: 20px;
-    padding: 0 12px;
+    padding: 0 14px;
+    max-width: 100%;
   }
 
   .feature-box {
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
-    box-sizing: border-box;
   }
 
-  /* Prevent shadows from causing overflow */
-  .feature-box,
-  .card {
-    overflow: hidden;
-  }
-
-  /* ================= CONTACT CARD FIX ================= */
-
-  .auth-card,
-  .form-container {
+  /* FORMS */
+  .form-container,
+  .auth-card {
     width: 100%;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 80px;
   }
 
-  /* ================= DARK MODE BUTTON FIX ================= */
+  /* FOOTER */
+  .footer-grid {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
 
+  /* DARK MODE BUTTON */
   .dark-toggle-btn {
-    position: fixed;
-    bottom: 20px;
+    bottom: 16px;
     right: 16px;
     max-width: calc(100% - 32px);
     z-index: 999;
