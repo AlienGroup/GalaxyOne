@@ -17,11 +17,12 @@
     font-size: 32px;
   }
   
-  .container {
+  .contact-wrapper {
     background: white;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
   }
   
@@ -174,8 +175,14 @@
   }
 
   @media (max-width: 768px) {
-  .container {
-    margin-bottom: 100px;
+  .contact-wrapper {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .content {
+    padding: 20px;
   }
 }
 </style>
@@ -184,7 +191,7 @@
 {% block content %}
 <h1 class="page-title">Get In Touch With Us</h1>
   
-  <div class="container">
+  <div class="contact-wrapper">
     <div class="form-header">
       <h2>Contact Us</h2>
       <p class="subtitle">We're here to help and answer any questions you might have</p>
