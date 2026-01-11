@@ -625,73 +625,93 @@ body.dark-mode .alert-info {
 }
 
 /* ===================================== */
-/* MOBILE NAV + HEADER FIX (FINAL) */
+/* MOBILE CONTENT FLOW FIX (HOME + CONTACT) */
 /* ===================================== */
 @media (max-width: 768px) {
 
-  /* Prevent fixed header from hiding content */
+  /* GLOBAL SAFETY */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   body {
-    padding-top: 140px;
+    overflow-x: hidden;
   }
 
-  /* Header layout */
-  .main-header {
-    height: auto;
+  /* MAIN CONTENT */
+  .main-content {
+    padding: 20px 15px;
+    max-width: 100%;
   }
 
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  /* NAV CONTAINER */
-  .main-nav {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* FORCE HORIZONTAL NAV */
-  .main-nav ul {
-    display: flex;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    width: max-content;
-    min-width: 100%;
-    gap: 14px;
-    padding: 6px 0;
-    margin: 0;
-  }
-
-  .main-nav ul::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-link {
-    white-space: nowrap;
-    padding: 8px 14px;
-    font-size: 0.95rem;
-    border-bottom: none;
-  }
-
-  /* Hero spacing */
+  /* HERO SECTION — REMOVE EMPTY GAPS */
   .hero-section {
-    padding: 100px 15px 60px;
+    padding: 60px 15px 50px;
+    min-height: auto;
   }
 
   .hero-section h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
+    line-height: 1.25;
   }
 
-  /* Footer */
-  .footer-grid {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
+  .hero-section p {
+    font-size: 1rem;
   }
 
-  .main-footer {
-    padding: 25px 15px;
-    font-size: 0.85rem;
+  /* TRUST STRIP */
+  .trust-strip {
+    gap: 12px;
+    padding: 15px;
+    font-size: 0.9rem;
+  }
+
+  /* FEATURES / HOME SECTIONS */
+  .features-row {
+    grid-template-columns: 1fr;
+    margin-top: 25px;
+  }
+
+  .feature-box {
+    padding: 25px 20px;
+  }
+
+  /* CONTACT + FORMS */
+  .form-container,
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 25px 20px;
+    margin: 20px auto;
+  }
+
+  textarea,
+  input,
+  select {
+    width: 100%;
+  }
+
+  /* PREVENT TEXT CUTTING */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* REMOVE FIXED HEIGHTS ANYWHERE */
+  section,
+  div {
+    min-height: auto;
+  }
+
+  /* CONTACT PAGE FIX */
+  .contact-section,
+  .about-section {
+    padding: 40px 15px;
   }
 }
