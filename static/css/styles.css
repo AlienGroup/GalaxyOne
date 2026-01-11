@@ -625,93 +625,68 @@ body.dark-mode .alert-info {
 }
 
 /* ===================================== */
-/* MOBILE CONTENT FLOW FIX (HOME + CONTACT) */
+/* FINAL MOBILE NAV + HEADER OVERRIDE */
+/* (AUTHORITATIVE – DO NOT MOVE) */
 /* ===================================== */
 @media (max-width: 768px) {
 
-  /* GLOBAL SAFETY */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
+  /* Prevent header overlap */
   body {
+    padding-top: 135px !important;
     overflow-x: hidden;
   }
 
-  /* MAIN CONTENT */
+  /* Header stays stacked but clean */
+  .header-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* FORCE horizontal nav */
+  .main-nav ul {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+
+    width: 100%;
+    gap: 14px;
+    padding-bottom: 8px;
+    margin-top: 8px;
+  }
+
+  /* Hide scrollbar but allow swipe */
+  .main-nav ul::-webkit-scrollbar {
+    height: 0;
+  }
+
+  /* Nav items */
+  .main-nav li {
+    flex: 0 0 auto;
+  }
+
+  .nav-link {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border-bottom: none !important;
+  }
+
+  /* Ensure content never hides */
   .main-content {
-    padding: 20px 15px;
+    padding-top: 20px;
     max-width: 100%;
   }
 
-  /* HERO SECTION — REMOVE EMPTY GAPS */
-  .hero-section {
-    padding: 60px 15px 50px;
-    min-height: auto;
-  }
-
-  .hero-section h1 {
-    font-size: 1.9rem;
-    line-height: 1.25;
-  }
-
-  .hero-section p {
-    font-size: 1rem;
-  }
-
-  /* TRUST STRIP */
-  .trust-strip {
-    gap: 12px;
-    padding: 15px;
-    font-size: 0.9rem;
-  }
-
-  /* FEATURES / HOME SECTIONS */
-  .features-row {
-    grid-template-columns: 1fr;
-    margin-top: 25px;
-  }
-
-  .feature-box {
-    padding: 25px 20px;
-  }
-
-  /* CONTACT + FORMS */
-  .form-container,
-  .auth-card {
-    width: 100%;
-    max-width: 100%;
-    padding: 25px 20px;
-    margin: 20px auto;
-  }
-
-  textarea,
-  input,
-  select {
-    width: 100%;
-  }
-
-  /* PREVENT TEXT CUTTING */
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  /* REMOVE FIXED HEIGHTS ANYWHERE */
+  /* Hero & sections flow naturally */
   section,
-  div {
-    min-height: auto;
-  }
-
-  /* CONTACT PAGE FIX */
-  .contact-section,
-  .about-section {
-    padding: 40px 15px;
+  .hero-section,
+  .about-section,
+  .contact-section {
+    min-height: auto !important;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
