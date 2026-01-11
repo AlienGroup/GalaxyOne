@@ -625,83 +625,67 @@ body.dark-mode .alert-info {
 }
 
 /* ===================================== */
-/* MOBILE HEADER & NAV – HARD OVERRIDE */
+/* FINAL MOBILE CONTENT FIX (NO OVERFLOW) */
 /* ===================================== */
 
 @media (max-width: 768px) {
 
-  /* Prevent layout overflow */
+  /* Kill ALL horizontal overflow globally */
   html, body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  /* Ensure all sections fit screen */
+  section,
+  .main-content,
+  .hero-section,
+  .why-choose-section,
+  .about-section,
+  .form-container {
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
-  /* Correct body offset for fixed header */
-  body {
-    padding-top: 140px !important;
+  /* ================= WHY CHOOSE US FIX ================= */
+
+  .features-row {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+    padding: 0 12px;
   }
 
-  /* Header container */
-  .main-header {
+  .feature-box {
     width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
-  .header-content {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
+  /* Prevent shadows from causing overflow */
+  .feature-box,
+  .card {
+    overflow: hidden;
+  }
+
+  /* ================= CONTACT CARD FIX ================= */
+
+  .auth-card,
+  .form-container {
     width: 100%;
-  }
-
-  /* ================= NAV FIX ================= */
-
-  .main-nav {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .main-nav ul {
-    display: flex !important;
-    flex-direction: row !important;     /* 🔒 FORCE HORIZONTAL */
-    flex-wrap: nowrap !important;        /* 🔒 NO WRAPPING */
-    gap: 14px;
-    padding: 6px 0 10px;
-    margin: 0;
-    width: max-content;
-    min-width: 100%;
-    white-space: nowrap;
-  }
-
-  .main-nav li {
-    flex: 0 0 auto;
-  }
-
-  .nav-link {
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    border-bottom: none !important;
-  }
-
-  .main-nav ul::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* ================= HERO FIX ================= */
-
-  .hero-section {
-    width: 100%;
-    padding: 90px 16px 60px;
+    max-width: 100%;
     margin: 0 auto;
   }
 
-  .hero-section * {
-    max-width: 100%;
-  }
-
-  /* ================= DARK MODE BUTTON ================= */
+  /* ================= DARK MODE BUTTON FIX ================= */
 
   .dark-toggle-btn {
-    bottom: 90px;
+    position: fixed;
+    bottom: 20px;
     right: 16px;
+    max-width: calc(100% - 32px);
     z-index: 999;
   }
 }
