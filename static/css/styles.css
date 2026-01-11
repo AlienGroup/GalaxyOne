@@ -625,32 +625,22 @@ body.dark-mode .alert-info {
 }
 
 /* ===================================== */
-/* MOBILE LAYOUT STABILITY FIX (FINAL) */
+/* MOBILE HEADER & NAV – HARD OVERRIDE */
 /* ===================================== */
 
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Prevent any section from exceeding screen width */
-* {
-  box-sizing: border-box;
-}
-
-/* ------------------------------ */
-/* MOBILE ONLY */
-/* ------------------------------ */
 @media (max-width: 768px) {
 
-  /* Account for header + compliance strip */
-  body {
-    padding-top: 170px !important;
+  /* Prevent layout overflow */
+  html, body {
     overflow-x: hidden;
   }
 
-  /* ================= HEADER ================= */
+  /* Correct body offset for fixed header */
+  body {
+    padding-top: 140px !important;
+  }
 
+  /* Header container */
   .main-header {
     width: 100%;
   }
@@ -662,24 +652,23 @@ html, body {
     width: 100%;
   }
 
-  /* Scrollable nav WITHOUT breaking layout */
+  /* ================= NAV FIX ================= */
+
   .main-nav {
     width: 100%;
     overflow-x: auto;
   }
 
   .main-nav ul {
-    display: inline-flex !important;
-    flex-wrap: nowrap !important;
-    white-space: nowrap;
-    width: max-content;
-    min-width: 100%;
+    display: flex !important;
+    flex-direction: row !important;     /* 🔒 FORCE HORIZONTAL */
+    flex-wrap: nowrap !important;        /* 🔒 NO WRAPPING */
     gap: 14px;
     padding: 6px 0 10px;
-  }
-
-  .main-nav ul::-webkit-scrollbar {
-    display: none;
+    margin: 0;
+    width: max-content;
+    min-width: 100%;
+    white-space: nowrap;
   }
 
   .main-nav li {
@@ -692,7 +681,11 @@ html, body {
     border-bottom: none !important;
   }
 
-  /* ================= HOME HERO ================= */
+  .main-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ================= HERO FIX ================= */
 
   .hero-section {
     width: 100%;
@@ -700,61 +693,8 @@ html, body {
     margin: 0 auto;
   }
 
-  .hero-section h1 {
-    font-size: 2rem;
-    line-height: 1.25;
-  }
-
-  .hero-section p {
-    font-size: 1rem;
-  }
-
-  /* Prevent hero cards from stretching */
-  .hero-section *,
-  .trust-strip,
-  .features-row,
-  .feature-box {
+  .hero-section * {
     max-width: 100%;
-  }
-
-  /* ================= TRUST STRIP ================= */
-
-  .trust-strip {
-    flex-wrap: wrap;
-    padding: 16px;
-    text-align: center;
-  }
-
-  /* ================= FEATURES ================= */
-
-  .features-row {
-    grid-template-columns: 1fr;
-    padding: 0 16px;
-  }
-
-  /* ================= CONTACT / FORMS ================= */
-
-  .form-container {
-    width: 100%;
-    margin: 20px auto;
-    padding: 24px 18px;
-  }
-
-  /* ================= FOOTER ================= */
-
-  .main-footer {
-    padding: 24px 16px;
-    font-size: 0.85rem;
-  }
-
-  .footer-grid {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-  }
-
-  .footer-section {
-    text-align: center;
   }
 
   /* ================= DARK MODE BUTTON ================= */
