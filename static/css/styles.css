@@ -692,3 +692,41 @@ body.dark-mode .alert-info {
     padding: 25px 20px;
   }
 }
+@media (max-width: 768px) {
+  body {
+    padding-top: 130px; /* fixes hidden content */
+  }
+}
+
+@media (max-width: 768px) {
+  .main-nav ul {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .main-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-footer {
+    padding: 25px 15px;
+    font-size: 0.85rem;
+  }
+
+  .footer-grid {
+    gap: 15px;
+  }
+
+  .footer-section h4 {
+    font-size: 1rem;
+  }
+}
