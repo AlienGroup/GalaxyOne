@@ -21,7 +21,6 @@
     background: white;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     max-width: 1000px;
     margin: 0 auto;
   }
@@ -173,12 +172,17 @@
     from { opacity: 0; }
     to { opacity: 1; }
   }
+
+  @media (max-width: 768px) {
+  .container {
+    margin-bottom: 100px;
+  }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
-  <h1 class="page-title">Get In Touch With Us</h1>
+<h1 class="page-title">Get In Touch With Us</h1>
   
   <div class="container">
     <div class="form-header">
