@@ -265,9 +265,9 @@ def apply():
         first_name, last_name = (full_name.split(' ', 1) + [''])[:2]
 
         try:
-            interest_rate = float(os.getenv('INTEREST_RATE', 0.12))
+            interest_rate = float(os.getenv('INTEREST_RATE', 0.20))
         except:
-            interest_rate = 0.12
+            interest_rate = 0.20
 
         # Create the application with detailed address fields
         application = Application(
