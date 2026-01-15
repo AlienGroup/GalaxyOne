@@ -12,25 +12,44 @@
             font-family: Arial, sans-serif;
             font-size: 12px;
             line-height: 1.6;
+            color: #222;
         }
 
-        h1, h2, h3 {
+        h1, h2 {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         h3 {
             margin-top: 25px;
-            text-align: left;
-        }
-
-        .section {
-            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
         }
 
         .small {
             font-size: 10px;
             color: #555;
+        }
+
+        /* LETTERHEAD */
+        .letterhead {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .letterhead td {
+            vertical-align: top;
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        .company-info {
+            text-align: right;
+            font-size: 11px;
         }
 
         .contract-content {
@@ -67,6 +86,22 @@
         table tr:nth-child(even) {
             background-color: #f4f4f4;
         }
+
+        .meta {
+            margin-top: 10px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .signature-block {
+            margin-top: 30px;
+        }
+
+        .signature-line {
+            margin-top: 20px;
+            border-top: 1px solid #333;
+            width: 300px;
+        }
     </style>
 </head>
 
@@ -81,75 +116,85 @@
 
 <div class="contract-content">
 
-<h1>Loan Agreement</h1>
-<h2>Alien Emergency Fund (Pty) Ltd</h2>
-
-<div class="section">
-    <strong>Applicant Details</strong>
-    <table>
-        <tr><td><strong>Full Name:</strong></td><td>{{ application.full_name }}</td></tr>
-        <tr><td><strong>ID Number:</strong></td><td>{{ application.id_number }}</td></tr>
-        <tr><td><strong>Email:</strong></td><td>{{ application.email }}</td></tr>
-        <tr><td><strong>Contact Number:</strong></td><td>{{ application.phone }}</td></tr>
-        <tr><td><strong>Residential Address:</strong></td><td>{{ application.full_address }}</td></tr>
-    </table>
-</div>
-
-<h3>1. Credit Provider Disclosure</h3>
-<p>
-Alien Emergency Fund (Pty) Ltd is a registered credit provider in terms of the
-National Credit Act 34 of 2005.
-</p>
-<ul>
-    <li><strong>NCR Registration Number:</strong> NCRCP12345</li>
-    <li><strong>Registered Address:</strong> 123 Main Road, Elliotdale, South Africa</li>
-</ul>
-
-<h3>2. Loan Summary</h3>
-<table>
-    <tr><td><strong>Loan Amount:</strong></td><td>R{{ '%.2f' % application.loan_amount }}</td></tr>
-    <tr><td><strong>Interest Rate:</strong></td><td>{{ (application.interest_rate * 100)|round(2) }}% per annum (fixed)</td></tr>
-    <tr><td><strong>Loan Term:</strong></td><td>{{ application.loan_term }} months</td></tr>
-    <tr><td><strong>Total Repayment:</strong></td><td>R{{ '%.2f' % total_payment }}</td></tr>
-    <tr><td><strong>Monthly Instalment:</strong></td><td>R{{ '%.2f' % monthly_payment }}</td></tr>
+<!-- LETTERHEAD -->
+<table class="letterhead">
+    <tr>
+        <td>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo">
+        </td>
+        <td class="company-info">
+            <strong>Alien Emergency Fund (Pty) Ltd</strong><br>
+            NCR Registration: NCRCP12345<br>
+            123 Main Road, Elliotdale<br>
+            South Africa<br>
+            Email: alienemergencyfund@gmail.com
+        </td>
+    </tr>
 </table>
 
-<h3>3. Disbursement of Funds</h3>
+<h1>Loan Agreement</h1>
+<h2>National Credit Act 34 of 2005</h2>
+
+<div class="meta">
+    Agreement Number: {{ application.id }} |
+    Date Issued: {{ application.date_signed.strftime('%d %B %Y') }}
+</div>
+
+<h3>1. Consumer Details</h3>
+<table>
+    <tr><td><strong>Full Name</strong></td><td>{{ application.full_name }}</td></tr>
+    <tr><td><strong>ID Number</strong></td><td>{{ application.id_number }}</td></tr>
+    <tr><td><strong>Email Address</strong></td><td>{{ application.email }}</td></tr>
+    <tr><td><strong>Contact Number</strong></td><td>{{ application.phone }}</td></tr>
+    <tr><td><strong>Residential Address</strong></td><td>{{ application.full_address }}</td></tr>
+</table>
+
+<h3>2. Credit Provider Disclosure</h3>
 <p>
-Funds will be paid into the bank account provided by the Consumer during the
-application process and verified through submitted bank statements.
-</p>
-<p>
-Disbursement will occur within <strong>1–2 business days</strong> after successful
-signing and final verification.
+Alien Emergency Fund (Pty) Ltd is a registered credit provider in terms of the
+National Credit Act 34 of 2005 and conducts its business in accordance with all
+applicable South African legislation.
 </p>
 
-<h3>4. Consumer Rights (National Credit Act)</h3>
+<h3>3. Loan Summary</h3>
+<table>
+    <tr><td><strong>Principal Loan Amount</strong></td><td>R{{ '%.2f' % application.loan_amount }}</td></tr>
+    <tr><td><strong>Interest Rate</strong></td><td>{{ (application.interest_rate * 100)|round(2) }}% per annum (fixed)</td></tr>
+    <tr><td><strong>Loan Term</strong></td><td>{{ application.loan_term }} months</td></tr>
+    <tr><td><strong>Total Amount Payable</strong></td><td>R{{ '%.2f' % total_payment }}</td></tr>
+    <tr><td><strong>Monthly Instalment</strong></td><td>R{{ '%.2f' % monthly_payment }}</td></tr>
+</table>
+
+<h3>4. Disbursement of Funds</h3>
+<p>
+Loan proceeds will be paid into the Consumer’s nominated bank account following
+successful verification and acceptance of this agreement. Disbursement occurs
+within 1–2 business days.
+</p>
+
+<h3>5. Consumer Rights</h3>
 <ul>
-    <li>The right to receive a copy of this agreement</li>
-    <li>The right to settle the loan early</li>
-    <li>The right to request statements of account</li>
-    <li>The right to apply for debt review if financially distressed</li>
+    <li>Right to receive a copy of this agreement</li>
+    <li>Right to early settlement without penalty</li>
+    <li>Right to request statements of account</li>
+    <li>Right to apply for debt review</li>
 </ul>
 
-<h3>5. Default and Legal Consequences</h3>
+<h3>6. Default, Enforcement and Legal Costs</h3>
 <p>
-Failure to make payment on the agreed due date may result in additional
-interest, collection costs, negative credit bureau reporting, and legal action
-in accordance with the National Credit Act.
+Failure to make payment on the due date may result in interest, collection costs,
+legal action, and adverse credit bureau listings, in accordance with the National
+Credit Act.
 </p>
 
-<h3>6. Protection of Personal Information (POPIA)</h3>
+<h3>7. Protection of Personal Information (POPIA)</h3>
 <p>
-Personal information is processed lawfully and securely in accordance with the
-Protection of Personal Information Act. Information is used solely for credit
-assessment, administration, compliance, and reporting where required.
+All personal information is processed lawfully, securely, and transparently in
+accordance with the Protection of Personal Information Act. Information is used
+solely for credit assessment, administration, and statutory reporting.
 </p>
 
-<h3>7. Bank Details for Repayment</h3>
-<p>
-<strong>(To be confirmed by Credit Provider)</strong>
-</p>
+<h3>8. Repayment Banking Details</h3>
 <ul>
     <li><strong>Bank Name:</strong> ________________________</li>
     <li><strong>Account Holder:</strong> ________________________</li>
@@ -158,27 +203,21 @@ assessment, administration, compliance, and reporting where required.
     <li><strong>Reference:</strong> Application ID {{ application.id }}</li>
 </ul>
 
-<h3>8. Contact Details</h3>
-<ul>
-    <li><strong>Email:</strong> alienemergencyfund@gmail.com</li>
-    <li><strong>Office Hours:</strong> Monday – Friday, 08:00 – 17:00</li>
-</ul>
-
-<h3>9. Electronic Signature</h3>
+<h3>9. Electronic Signature & Acceptance</h3>
 <p>
-By electronically accepting this agreement, the Consumer acknowledges that
-this constitutes a legally binding electronic signature in accordance with the
-Electronic Communications and Transactions Act 25 of 2002.
+By electronically accepting this agreement, the Consumer acknowledges that this
+constitutes a legally binding electronic signature in terms of the Electronic
+Communications and Transactions Act 25 of 2002.
 </p>
 
-<div class="section">
-    <strong>Signed by Applicant</strong><br>
-    Date Signed: {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
+<div class="signature-block">
+    <strong>Signed by Consumer</strong><br>
+    Date: {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
     IP Address: {{ application.signed_ip }}
 </div>
 
-<div class="section small">
-    Alien Emergency Fund (Pty) Ltd • NCR & POPIA Compliant
+<div class="small" style="margin-top:30px; text-align:center;">
+    Alien Emergency Fund (Pty) Ltd • NCR Registered • POPIA Compliant
 </div>
 
 </div>
