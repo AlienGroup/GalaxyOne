@@ -37,7 +37,7 @@
 
                 <div class="calc-results mt-4 d-none" id="results">
                     <h5 class="text-dark">Repayment Breakdown</h5>
-                    <p class="mb-1">Estimated Interest Rate: <strong>15.25% APR</strong></p>
+                    <p class="mb-1">Estimated Interest Rate: <strong>20% APR</strong></p>
                     <p>Monthly Payment: <strong>R<span id="monthlyPayment"></span></strong></p>
                     <p>Total Repayment: <strong>R<span id="totalRepayment"></span></strong></p>
                     <p id="affordabilityCheck" class="mt-3"></p>
@@ -63,7 +63,7 @@ document.getElementById('loanCalcForm').addEventListener('submit', function (e) 
     const term = parseInt(document.getElementById('loanTerm').value);
     const income = parseFloat(document.getElementById('monthlyIncome').value);
     const expenses = parseFloat(document.getElementById('monthlyExpenses').value);
-    const interestRate = 0.1525; // Estimated APR: 15.25%
+    const interestRate = 0.20; // Estimated APR: 20%
 
     const affordabilityMsg = document.getElementById('affordabilityCheck');
     const continueBtn = document.getElementById('continueBtn');
