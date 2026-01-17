@@ -139,19 +139,21 @@
                             <span class="input-group-text bg-light">R</span>
                             <input type="number" class="form-control" id="loan_amount" name="loan_amount" min="1000" max="50000" step="500" required>
                         </div>
-                        <small class="form-text text-muted">Between R1,000 - R50,000</small>
+                        <small class="form-text text-muted">Between R100 - R8,000</small>
                         <div class="invalid-feedback">Please enter loan amount between R1,000 - R50,000</div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-medium">Loan Term *</label>
                         <select class="form-select" id="loan_term" name="loan_term" required>
                             <option value="" selected disabled>Select...</option>
+                            <option value="1">1 month</option>
+                            <option value="2">2 months</option>
                             <option value="3">3 months</option>
+                            <option value="4">4 months</option>
+                            <option value="5">5 months</option>
                             <option value="6">6 months</option>
-                            <option value="9">9 months</option>
-                            <option value="12">12 months</option>
                         </select>
-                        <small class="form-text text-muted">Maximum 12 months as per NCA regulations</small>
+                        <small class="form-text text-muted">Maximum 6 months (short-term credit under the National Credit Act)</small>
                         <div class="invalid-feedback">Please select loan term</div>
                     </div>
                     

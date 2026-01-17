@@ -12,42 +12,137 @@
                 <form id="loanCalcForm" class="text-start">
                     <div class="mb-3">
                         <label for="loanAmount" class="form-label fw-bold">Loan Amount (R):</label>
-                        <input type="number" id="loanAmount" class="form-control" required placeholder="e.g. 5000">
+                        <input type="number" id="loanAmount" class="form-control" 
+                               required min="100" max="8000" step="100"
+                               placeholder="e.g. 5000 (Max 8000)">
+                        <div class="form-text">Minimum: R100 | Maximum: R8,000</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="loanTerm" class="form-label fw-bold">Loan Term (months):</label>
-                        <input type="number" id="loanTerm" class="form-control" required placeholder="e.g. 6">
+                        <input type="number" id="loanTerm" class="form-control" 
+                               required min="1" max="6"
+                               placeholder="e.g. 3 (Max 6 months)">
+                        <div class="form-text">1 to 6 months only</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="monthlyIncome" class="form-label fw-bold">Monthly Income (R):</label>
-                        <input type="number" id="monthlyIncome" class="form-control" required placeholder="e.g. 12000">
+                        <input type="number" id="monthlyIncome" class="form-control" 
+                               required min="1"
+                               placeholder="e.g. 12000">
                     </div>
 
                     <div class="mb-3">
                         <label for="monthlyExpenses" class="form-label fw-bold">Monthly Expenses (R):</label>
-                        <input type="number" id="monthlyExpenses" class="form-control" required placeholder="e.g. 7500">
+                        <input type="number" id="monthlyExpenses" class="form-control" 
+                               required min="0"
+                               placeholder="e.g. 7500">
                     </div>
 
-                    <button type="submit" class="btn btn-primary mt-3 w-100">
+                    <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-calculator me-1"></i> Calculate
                     </button>
+                    
+                    <div class="text-center mt-3">
+                        <button type="button" id="loadExample" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-lightbulb me-1"></i> Load Example
+                        </button>
+                        <button type="button" id="clearForm" class="btn btn-outline-secondary btn-sm ms-2">
+                            <i class="fas fa-redo me-1"></i> Clear
+                        </button>
+                    </div>
                 </form>
 
                 <div class="calc-results mt-4 d-none" id="results">
-                    <h5 class="text-dark">Repayment Breakdown</h5>
-                    <p class="mb-1">Estimated Interest Rate: <strong>20% APR</strong></p>
-                    <p>Monthly Payment: <strong>R<span id="monthlyPayment"></span></strong></p>
-                    <p>Total Repayment: <strong>R<span id="totalRepayment"></span></strong></p>
-                    <p id="affordabilityCheck" class="mt-3"></p>
-                    <div style="max-width: 280px; margin: 0 auto;">
-                        <canvas id="chartCanvas" height="200"></canvas>
-                    </div>
-                    <div class="mt-4 d-none" id="continueBtn">
-                        <a href="{{ url_for('main.apply') }}" class="btn btn-success w-100">
-                            <i class="fas fa-paper-plane me-2"></i> Continue with Application
-                        </a>
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Repayment Breakdown</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="alert alert-success">
+                                        <h6 class="alert-heading">Monthly Payment</h6>
+                                        <h3 class="mb-0">R<span id="calcMonthlyPayment">0.00</span></h3>
+                                        <small>For <span id="calcTermDisplay">0</span> months</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="alert alert-warning">
+                                        <h6 class="alert-heading">Total Repayment</h6>
+                                        <h3 class="mb-0">R<span id="calcTotalRepayment">0.00</span></h3>
+                                        <small>Including interest</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="mb-2">
+                                <i class="fas fa-percentage text-primary me-1"></i>
+                                <strong>Interest Rate:</strong> 5% per month (NCR short-term credit)
+                            </p>
+                            
+                            <!-- Affordability Check -->
+                            <div id="affordabilityCheck" class="mt-3 p-3 rounded bg-light"></div>
+                            
+                            <!-- Chart Container -->
+                            <div class="chart-container mt-4 text-center">
+                                <div class="mb-3">
+                                    <h6 class="text-dark">Breakdown: Principal vs Interest</h6>
+                                </div>
+                                <div style="max-width: 300px; margin: 0 auto;">
+                                    <canvas id="loanChartCanvas" height="250"></canvas>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6 text-end">
+                                        <span class="badge bg-success p-2">
+                                            <i class="fas fa-square me-1"></i> Principal
+                                        </span>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <span class="badge bg-warning p-2">
+                                            <i class="fas fa-square me-1"></i> Interest
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Detailed Breakdown -->
+                            <div class="detailed-breakdown mt-4 p-3 border rounded">
+                                <h6 class="text-dark mb-3"><i class="fas fa-list-alt me-2"></i>Detailed Calculation</h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="border-end">
+                                            <div class="text-muted small">Principal</div>
+                                            <div class="h5 text-success">R<span id="calcPrincipal">0.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-end">
+                                            <div class="text-muted small">Total Interest</div>
+                                            <div class="h5 text-warning">R<span id="calcTotalInterest">0.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div>
+                                            <div class="text-muted small">Interest %</div>
+                                            <div class="h5 text-primary"><span id="calcInterestPercent">0.0</span>%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Continue Button -->
+                            <div class="mt-4 d-none" id="continueBtn">
+                                <a href="{{ url_for('main.apply') }}" class="btn btn-success w-100 btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i> Continue with Application
+                                </a>
+                                <p class="text-muted small mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    By continuing, you agree to our terms and conditions
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,75 +150,281 @@
     </div>
 </section>
 
+<style>
+.calc-results .alert h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+#affordabilityCheck {
+    border-left: 4px solid #007bff;
+    background: linear-gradient(90deg, rgba(0,123,255,0.05) 0%, rgba(255,255,255,1) 100%);
+}
+.detailed-breakdown {
+    background-color: #f8fafc;
+}
+.chart-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+}
+</style>
+
 <script>
+// Loan Calculator with Chart - Simple Interest
+let loanChart = null;
+
 document.getElementById('loanCalcForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
+    /* ================= NCR RULES ================= */
+    const MAX_LOAN_AMOUNT = 8000;
+    const MAX_LOAN_TERM = 6;
+    const MONTHLY_INTEREST_RATE = 0.05; // 5% per month
+
+    /* ================= INPUTS ================= */
     const amount = parseFloat(document.getElementById('loanAmount').value);
     const term = parseInt(document.getElementById('loanTerm').value);
     const income = parseFloat(document.getElementById('monthlyIncome').value);
     const expenses = parseFloat(document.getElementById('monthlyExpenses').value);
-    const interestRate = 0.20; // Estimated APR: 20%
 
+    /* ================= VALIDATION ================= */
+    let errors = [];
+    
+    if (!amount || amount < 100 || amount > MAX_LOAN_AMOUNT) {
+        errors.push(`Loan amount must be between R100 and R${MAX_LOAN_AMOUNT.toLocaleString()}`);
+    }
+    
+    if (!term || term < 1 || term > MAX_LOAN_TERM) {
+        errors.push(`Loan term must be between 1 and ${MAX_LOAN_TERM} months`);
+    }
+    
+    if (!income || income < 1) {
+        errors.push("Please enter a valid monthly income");
+    }
+    
+    if (expenses < 0) {
+        errors.push("Expenses cannot be negative");
+    }
+    
+    if (errors.length > 0) {
+        alert("Please fix the following:\n\n" + errors.join("\n"));
+        return;
+    }
+
+    /* ================= DESTROY OLD CHART PROPERLY ================= */
+    if (loanChart) {
+        try {
+            loanChart.destroy();
+        } catch (e) {
+            console.warn("Chart destruction warning:", e);
+        }
+        loanChart = null;
+    }
+
+    /* ================= SIMPLE INTEREST CALCULATION ================= */
+    const totalInterest = amount * MONTHLY_INTEREST_RATE * term;
+    const totalRepayable = amount + totalInterest;
+    const monthlyPayment = totalRepayable / term;
+    const interestPercent = ((totalInterest / totalRepayable) * 100).toFixed(1);
+    
+    /* ================= UPDATE DISPLAY ================= */
+    document.getElementById('calcMonthlyPayment').textContent = monthlyPayment.toFixed(2);
+    document.getElementById('calcTotalRepayment').textContent = totalRepayable.toFixed(2);
+    document.getElementById('calcTermDisplay').textContent = term;
+    document.getElementById('calcPrincipal').textContent = amount.toFixed(2);
+    document.getElementById('calcTotalInterest').textContent = totalInterest.toFixed(2);
+    document.getElementById('calcInterestPercent').textContent = interestPercent;
+    
+    // Show results section
+    document.getElementById('results').classList.remove('d-none');
+
+    /* ================= AFFORDABILITY CHECK ================= */
+    const availableFunds = income - expenses;
     const affordabilityMsg = document.getElementById('affordabilityCheck');
     const continueBtn = document.getElementById('continueBtn');
+    
+    // Clear previous messages
+    affordabilityMsg.className = 'mt-3 p-3 rounded bg-light';
+    continueBtn.classList.add('d-none');
+    
+    if (availableFunds <= 0) {
+        affordabilityMsg.innerHTML = 
+            `<div class="text-center">
+                <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
+                <h5 class="text-danger fw-bold">Expenses exceed income</h5>
+                <p class="text-muted">Please review your budget before applying</p>
+            </div>`;
+    } else if (monthlyPayment > availableFunds) {
+        const shortfall = monthlyPayment - availableFunds;
+        affordabilityMsg.innerHTML = 
+            `<div class="text-center">
+                <i class="fas fa-ban fa-2x text-danger mb-2"></i>
+                <h5 class="text-danger fw-bold">Payment exceeds available funds</h5>
+                <p class="text-muted">
+                    Available: <strong>R${availableFunds.toFixed(2)}</strong><br>
+                    Required: <strong>R${monthlyPayment.toFixed(2)}</strong><br>
+                    Shortfall: <strong>R${shortfall.toFixed(2)}</strong>
+                </p>
+            </div>`;
+    } else if (monthlyPayment > availableFunds * 0.5) {
+        const usagePercent = ((monthlyPayment / availableFunds) * 100).toFixed(0);
+        affordabilityMsg.innerHTML = 
+            `<div class="text-center">
+                <i class="fas fa-exclamation-circle fa-2x text-warning mb-2"></i>
+                <h5 class="text-warning fw-bold">High repayment burden</h5>
+                <p class="text-muted">
+                    This loan uses <strong>${usagePercent}%</strong> of your available funds<br>
+                    Consider a smaller amount or longer term
+                </p>
+            </div>`;
+        continueBtn.classList.remove('d-none');
+    } else {
+        const usagePercent = ((monthlyPayment / availableFunds) * 100).toFixed(0);
+        affordabilityMsg.innerHTML = 
+            `<div class="text-center">
+                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                <h5 class="text-success fw-bold">Loan appears affordable</h5>
+                <p class="text-muted">
+                    Payment uses <strong>${usagePercent}%</strong> of available funds<br>
+                    Available funds after payment: <strong>R${(availableFunds - monthlyPayment).toFixed(2)}</strong>
+                </p>
+            </div>`;
+        continueBtn.classList.remove('d-none');
+    }
 
-    if (amount > 0 && term > 0 && income > 0 && expenses >= 0) {
-        const totalRepayable = amount * (1 + interestRate);
-        const monthlyPayment = totalRepayable / term;
-        const availableFunds = income - expenses;
-
-        document.getElementById('monthlyPayment').innerText = monthlyPayment.toFixed(2);
-        document.getElementById('totalRepayment').innerText = totalRepayable.toFixed(2);
-        document.getElementById('results').classList.remove('d-none');
-
-        // Affordability logic
-        if (monthlyPayment <= availableFunds * 0.4) {
-            affordabilityMsg.innerHTML = `<span class="text-success"><i class="fas fa-check-circle me-1"></i> You are likely to afford this loan.</span>`;
-            continueBtn.classList.remove('d-none');
-        } else if (monthlyPayment <= availableFunds * 0.6) {
-            affordabilityMsg.innerHTML = `<span class="text-warning"><i class="fas fa-exclamation-circle me-1"></i> Loan might be borderline based on your expenses.</span>`;
-            continueBtn.classList.add('d-none');
-        } else {
-            affordabilityMsg.innerHTML = `<span class="text-danger"><i class="fas fa-times-circle me-1"></i> This loan may not be affordable with your current financials.</span>`;
-            continueBtn.classList.add('d-none');
-        }
-
-        // Chart
-        const ctx = document.getElementById('chartCanvas').getContext('2d');
-        if (window.loanChart) {
-            window.loanChart.destroy();
-        }
-        window.loanChart = new Chart(ctx, {
+    /* ================= CREATE CHART ================= */
+    const ctx = document.getElementById('loanChartCanvas').getContext('2d');
+    
+    try {
+        loanChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Principal', 'Interest'],
+                labels: [
+                    `Principal (${((amount / totalRepayable) * 100).toFixed(1)}%)`,
+                    `Interest (${interestPercent}%)`
+                ],
                 datasets: [{
-                    data: [amount, totalRepayable - amount],
+                    data: [amount, totalInterest],
                     backgroundColor: ['#007749', '#FF8C00'],
-                    borderWidth: 1
+                    borderColor: ['#005732', '#E67E22'],
+                    borderWidth: 2,
+                    hoverOffset: 15
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { 
+                        display: false // We're using custom badges instead
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                const percent = ((value / totalRepayable) * 100).toFixed(1);
+                                return `${context.label}: R${value.toFixed(2)} (${percent}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%',
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
                 }
             }
         });
+    } catch (chartError) {
+        console.error("Chart creation error:", chartError);
+        // Hide chart container on error
+        document.querySelector('.chart-container').innerHTML = 
+            `<div class="alert alert-warning">
+                <i class="fas fa-chart-line me-2"></i>
+                Chart display unavailable. Calculations are still correct.
+            </div>`;
     }
 });
-</script>
 
-{% block styles %}
-<style>
-#affordabilityCheck span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #FF8C00 !important; /* Strong orange */
+/* ================= EXAMPLE LOADER ================= */
+document.getElementById('loadExample').addEventListener('click', function() {
+    document.getElementById('loanAmount').value = 5000;
+    document.getElementById('loanTerm').value = 3;
+    document.getElementById('monthlyIncome').value = 15000;
+    document.getElementById('monthlyExpenses').value = 9000;
+    
+    // Trigger calculation
+    document.getElementById('loanCalcForm').dispatchEvent(new Event('submit'));
+});
+
+/* ================= CLEAR FORM ================= */
+document.getElementById('clearForm').addEventListener('click', function() {
+    document.getElementById('loanCalcForm').reset();
+    document.getElementById('results').classList.add('d-none');
+    
+    // Destroy chart if exists
+    if (loanChart) {
+        try {
+            loanChart.destroy();
+        } catch (e) {
+            // Ignore destruction errors
+        }
+        loanChart = null;
+    }
+    
+    // Clear chart canvas
+    const canvas = document.getElementById('loanChartCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+/* ================= REAL-TIME PREVIEW ================= */
+function showTermPreview() {
+    const amount = parseFloat(document.getElementById('loanAmount').value);
+    const term = parseInt(document.getElementById('loanTerm').value);
+    
+    if (amount && term && term >= 1 && term <= 6) {
+        const MONTHLY_INTEREST_RATE = 0.05;
+        const totalInterest = amount * MONTHLY_INTEREST_RATE * term;
+        const totalRepayable = amount + totalInterest;
+        const monthlyPayment = totalRepayable / term;
+        
+        // Update term input placeholder with preview
+        const termInput = document.getElementById('loanTerm');
+        const originalPlaceholder = termInput.placeholder;
+        termInput.placeholder = `${term} months = R${monthlyPayment.toFixed(2)}/month`;
+        
+        // Reset placeholder after 3 seconds
+        setTimeout(() => {
+            termInput.placeholder = originalPlaceholder;
+        }, 3000);
+    }
 }
-</style>
-{% endblock %}
+
+// Add event listeners for real-time preview
+document.getElementById('loanAmount').addEventListener('input', showTermPreview);
+document.getElementById('loanTerm').addEventListener('input', showTermPreview);
+
+/* ================= KEYBOARD SHORTCUTS ================= */
+document.addEventListener('keydown', function(e) {
+    // Ctrl+Enter or Cmd+Enter to calculate
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('loanCalcForm').dispatchEvent(new Event('submit'));
+    }
+    
+    // Escape to clear
+    if (e.key === 'Escape') {
+        document.getElementById('clearForm').click();
+    }
+});
+
+/* ================= INITIALIZE ON PAGE LOAD ================= */
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Loan Calculator Loaded - Simple Interest');
+    console.log('Unique IDs ensure no conflicts with other calculators');
+});
+</script>
 
 {% endblock %}

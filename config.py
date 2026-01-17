@@ -67,7 +67,7 @@ class Config:
     # =========================
     # Loan Configuration
     # =========================
-    INTEREST_RATE = float(os.environ.get("INTEREST_RATE", 0.20))
+    INTEREST_RATE = float(os.environ.get("INTEREST_RATE", 0.05))
 
     # =========================
     # reCAPTCHA Configuration

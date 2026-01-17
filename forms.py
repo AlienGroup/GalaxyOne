@@ -47,9 +47,9 @@ class ResetPasswordForm(FlaskForm):
 class LoanApplicationForm(FlaskForm):
     # Personal details
     full_name = StringField('Full Name', validators=[DataRequired()])
-    id_number = StringField('South African ID Number', validators=[DataRequired(), Length(min=6, max=30)])
+    id_number = StringField('South African ID Number', validators=[DataRequired(), Length(min=13, max=13)])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
-    phone = StringField('Mobile Number', validators=[DataRequired(), Length(min=8, max=20)])
+    phone = StringField('Mobile Number', validators=[DataRequired(), Length(min=9, max=10)])
     
     # Enhanced Address Fields
     address_line1 = StringField('Address Line 1', validators=[DataRequired(), Length(max=100)])
@@ -77,8 +77,21 @@ class LoanApplicationForm(FlaskForm):
     employment_duration = StringField('Employment Duration', validators=[DataRequired(), Length(max=100)])
 
     # Loan
-    loan_amount = DecimalField('Loan Amount Needed (ZAR)', places=2, validators=[DataRequired(), NumberRange(min=1000)])
-    loan_term = IntegerField('Repayment Term', validators=[DataRequired(), NumberRange(min=1, max=60)])
+    loan_amount = DecimalField(
+        'Loan Amount Needed (ZAR)',
+        places=2,
+        validators=[
+            DataRequired(),
+            NumberRange(min=100, max=8000, message='Loan amount must be between R100 and R8,000')
+        ]
+    )
+    loan_term = IntegerField(
+        'Repayment Term (Months)',
+        validators=[
+            DataRequired(),
+            NumberRange(min=1, max=6, message='Repayment term must be between 1 and 6 months')
+        ]
+    )
     purpose = SelectField('Purpose of Loan', choices=[
         ('', 'Select...'),
         ('medical', 'Medical Expenses'),

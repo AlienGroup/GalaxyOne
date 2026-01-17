@@ -120,7 +120,7 @@
 <table class="letterhead">
     <tr>
         <td>
-            <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo">
+            <img src="{{ request.url_root }}static/images/logo.png" class="logo">
         </td>
         <td class="company-info">
             <strong>Alien Emergency Fund (Pty) Ltd</strong><br>
@@ -157,13 +157,29 @@ applicable South African legislation.
 </p>
 
 <h3>3. Loan Summary</h3>
+<p class="small">
+  This agreement constitutes a short-term credit transaction with a maximum
+  repayment period of six (6) months, as regulated by the National Credit Act.
+</p>
 <table>
     <tr><td><strong>Principal Loan Amount</strong></td><td>R{{ '%.2f' % application.loan_amount }}</td></tr>
-    <tr><td><strong>Interest Rate</strong></td><td>{{ (application.interest_rate * 100)|round(2) }}% per annum (fixed)</td></tr>
+    <tr>
+      <td><strong>Interest Rate</strong></td>
+      <td>
+        {{ (application.interest_rate * 100)|round(2) }}% per month
+        <span class="small">(short-term credit as defined by the National Credit Act)</span>
+      </td>
+    </tr>
     <tr><td><strong>Loan Term</strong></td><td>{{ application.loan_term }} months</td></tr>
     <tr><td><strong>Total Amount Payable</strong></td><td>R{{ '%.2f' % total_payment }}</td></tr>
     <tr><td><strong>Monthly Instalment</strong></td><td>R{{ '%.2f' % monthly_payment }}</td></tr>
 </table>
+
+<p class="small">
+  Interest is calculated monthly on the principal loan amount at the agreed
+  rate for the full loan term. The total repayment amount shown above represents
+  the full cost of credit excluding any default charges.
+</p>
 
 <h3>4. Disbursement of Funds</h3>
 <p>

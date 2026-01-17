@@ -581,6 +581,27 @@ body.dark-mode .alert-info {
 }
 
 /* ===================================================== */
+/* ADMIN FINANCE TABLE — HORIZONTAL SCROLL */
+/* ===================================================== */
+
+.table-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll-wrapper table {
+  min-width: 900px;
+  width: 100%;
+}
+
+.finance-table th,
+.finance-table td {
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+/* ===================================================== */
 /* SINGLE SOURCE OF TRUTH — MOBILE LAYOUT (FINAL) */
 /* ===================================================== */
 @media (max-width: 768px) {

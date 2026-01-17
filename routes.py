@@ -264,19 +264,29 @@ def apply():
         full_name = form.full_name.data.strip()
         first_name, last_name = (full_name.split(' ', 1) + [''])[:2]
 
-        try:
-            interest_rate = float(os.getenv('INTEREST_RATE', 0.20))
-        except:
-            interest_rate = 0.20
+        # NCR-compliant short-term loan rules
+        MAX_LOAN_AMOUNT = 8000
+        MAX_LOAN_TERM = 6
+        MONTHLY_INTEREST_RATE = 0.05  # 5% per month
 
-        # Create the application with detailed address fields
+        # Enforce NCR limits
+        if form.loan_amount.data > MAX_LOAN_AMOUNT:
+            flash("Maximum loan amount is R8,000.", "danger")
+            return render_template("application_form.html", form=form)
+
+        if form.loan_term.data > MAX_LOAN_TERM:
+            flash("Maximum loan term is 6 months.", "danger")
+            return render_template("application_form.html", form=form)
+
+        loan_amount = form.loan_amount.data
+        loan_term = form.loan_term.data
+
         application = Application(
             user_id=current_user.id,
             full_name=full_name,
             id_number=form.id_number.data.strip(),
             email=form.email.data.strip(),
             phone=form.phone.data.strip(),
-            # Updated: Use detailed address fields instead of single address field
             address_line1=form.address_line1.data.strip(),
             address_line2=form.address_line2.data.strip() if form.address_line2.data else None,
             suburb=form.suburb.data.strip() if form.suburb.data else None,
@@ -288,10 +298,13 @@ def apply():
             job_title=form.job_title.data.strip() if form.job_title.data else '',
             monthly_income=form.monthly_income.data,
             employment_duration=form.employment_duration.data.strip(),
-            loan_amount=form.loan_amount.data,
-            loan_term=form.loan_term.data,
+
+            # ✅ NCR-compliant values
+            loan_amount=loan_amount,
+            loan_term=loan_term,
+            interest_rate=MONTHLY_INTEREST_RATE,  # MONTHLY, NOT ANNUAL
+
             purpose=form.purpose.data,
-            interest_rate=interest_rate,
             status='Pending',
             date_submitted=datetime.utcnow()
         )
@@ -467,12 +480,12 @@ def sign_contract(app_id):
         flash('This application is not available for signing.', 'warning')
         return redirect(url_for('main.dashboard'))
 
-    # === CALCULATE PAYMENT DETAILS ===
+    # === CALCULATE PAYMENT DETAILS (NCR SHORT-TERM) ===
     loan_amount = float(app_data.loan_amount)
-    interest_rate = float(app_data.interest_rate)  # annual
-    loan_term = int(app_data.loan_term)             # months
+    monthly_interest_rate = float(app_data.interest_rate)  # 5% per month
+    loan_term = int(app_data.loan_term)  # max 6
 
-    total_interest = loan_amount * interest_rate
+    total_interest = loan_amount * monthly_interest_rate * loan_term
     total_payment = loan_amount + total_interest
     monthly_payment = total_payment / loan_term
 
