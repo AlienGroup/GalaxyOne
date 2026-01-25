@@ -2,12 +2,10 @@ import os
 import textwrap
 from decimal import Decimal
 from datetime import datetime
-from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import (
-    black, white, orange, darkorange, orangered,
-    lightsalmon, navajowhite, lightgrey, gray, 
-    HexColor
+    black, white, gray, HexColor
 )
 from reportlab.lib.units import cm
 from flask import current_app
@@ -46,28 +44,37 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     ORANGE_DARK = HexColor('#E67E22')  # Darker orange
     ORANGE_BRIGHT = HexColor('#FF6B00')  # Bright orange
     
-    # ===== WATERMARK (FIRST - BACKGROUND) =====
-    c.saveState()
-    c.setFont("Helvetica-Bold", 80)
-    c.setFillColor(HexColor('#FFE5CC'))  # Very light orange
-    c.translate(width/2, height/2)
-    c.rotate(-35)  # Rotated watermark
+    # Track pages for watermark placement
+    page_count = [0]  # Use list to maintain reference across functions
     
-    # Watermark text
-    c.drawCentredString(0, 0, "SIGNED")
+    # ===== HELPER FUNCTION TO ADD WATERMARK =====
+    def add_watermark(page_num, total_pages):
+        """Add watermark to all pages except the last one"""
+        if page_num < total_pages:  # All pages except last
+            c.saveState()
+            c.setFont("Helvetica-Bold", 80)
+            c.setFillColor(HexColor('#FFE5CC'))  # Very light orange
+            c.translate(width/2, height/2)
+            c.rotate(-35)  # Rotated watermark
+            
+            # Watermark text
+            c.drawCentredString(0, 0, "SIGNED")
+            
+            # Date and IP below
+            c.setFont("Helvetica", 24)
+            date_text = application.date_signed.strftime('%d %B %Y')
+            c.drawCentredString(0, -2*cm, date_text)
+            
+            c.setFont("Helvetica", 18)
+            ip_text = f"IP: {application.signed_ip}"
+            c.drawCentredString(0, -3.5*cm, ip_text)
+            
+            c.restoreState()
     
-    # Date and IP below
-    c.setFont("Helvetica", 24)
-    date_text = application.date_signed.strftime('%d %B %Y')
-    c.drawCentredString(0, -2*cm, date_text)
+    # ===== LETTERHEAD WITH LOGO (FIRST PAGE) =====
+    # Add watermark for first page (will be incremented later)
+    page_count[0] += 1
     
-    c.setFont("Helvetica", 18)
-    ip_text = f"IP: {application.signed_ip}"
-    c.drawCentredString(0, -3.5*cm, ip_text)
-    
-    c.restoreState()
-    
-    # ===== LETTERHEAD WITH LOGO =====
     # Orange header bar
     c.setFillColor(ORANGE_PRIMARY)
     c.rect(0, height - 2.5*cm, width, 2.5*cm, fill=1, stroke=0)
@@ -248,7 +255,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 2: CREDIT PROVIDER DISCLOSURE =====
     if y < 10*cm:
         c.showPage()
-        # Add logo to new page header
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -279,6 +286,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 3: LOAN SUMMARY =====
     if y < 15*cm:
         c.showPage()
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -290,17 +298,25 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     y -= 0.8*cm
     
-    # Important note box
+    # Important note box - FIXED: Adjusted width to prevent text cutoff
+    note_box_height = 1.2*cm  # Increased height for better fit
+    note_box_width = width - 4*cm
     c.setFillColor(HexColor('#FFF3E0'))  # Light orange background
     c.setStrokeColor(ORANGE_DARK)
     c.setLineWidth(1)
-    c.roundRect(2*cm, y - 1*cm, width - 4*cm, 1*cm, 5, fill=1, stroke=1)
+    c.roundRect(2*cm, y - note_box_height, note_box_width, note_box_height, 5, fill=1, stroke=1)
     
-    c.setFont("Helvetica-Bold", 10)
+    c.setFont("Helvetica-Bold", 9)  # Reduced font size to fit text
     c.setFillColor(ORANGE_DARK)
-    note_text = "⚠️ This agreement constitutes a short-term credit transaction with a maximum repayment period of six (6) months"
-    c.drawString(2.5*cm, y - 0.6*cm, note_text)
-    y -= 1.5*cm
+    
+    # Split the note into two lines to prevent cutoff
+    note_text_line1 = "⚠️ This agreement constitutes a short-term credit transaction"
+    note_text_line2 = "with a maximum repayment period of six (6) months"
+    
+    c.drawString(2.5*cm, y - 0.7*cm, note_text_line1)
+    c.drawString(2.5*cm, y - 1.2*cm, note_text_line2)
+    
+    y -= note_box_height + 0.3*cm  # Adjusted spacing
     
     # Calculate values
     total_interest = total_payment - loan_amount
@@ -345,8 +361,8 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     c.setFillColor(gray)
     calc_note = [
         "Interest Calculation: Interest is calculated monthly on the principal loan amount at the agreed",
-        f"rate for the full loan term. The total repayment amount shown above represents the full cost",
-        f"of credit excluding any default charges."
+        "rate for the full loan term. The total repayment amount shown above represents the full cost",
+        "of credit excluding any default charges."
     ]
     
     for line in calc_note:
@@ -358,6 +374,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 4: DISBURSEMENT OF FUNDS =====
     if y < 10*cm:
         c.showPage()
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -411,6 +428,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 6: DEFAULT, ENFORCEMENT AND LEGAL COSTS =====
     if y < 10*cm:
         c.showPage()
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -460,6 +478,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 8: REPAYMENT BANKING DETAILS =====
     if y < 8*cm:
         c.showPage()
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -506,6 +525,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 9: ELECTRONIC SIGNATURE & ACCEPTANCE =====
     if y < 10*cm:
         c.showPage()
+        page_count[0] += 1
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -592,6 +612,14 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
         c.drawCentredString(width/2, footer_y - (i * 0.4*cm), line)
     
     # ===== FINALIZE PDF =====
+    # Get total pages (add 1 for the current page we're about to finish)
+    total_pages = page_count[0]
+    
+    # Add watermark to all pages except last
+    for page_num in range(1, total_pages + 1):
+        c.setPage(page_num - 1)  # ReportLab pages are 0-indexed
+        add_watermark(page_num, total_pages)
+    
     c.showPage()
     c.save()
     
@@ -601,6 +629,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     file_size = os.path.getsize(pdf_path)
     print(f"✅ PDF successfully generated: {pdf_path} ({file_size} bytes)")
+    print(f"📄 Total pages: {total_pages}")
     
     return pdf_path
 
@@ -639,6 +668,7 @@ def draw_page_header(c, width, height, app_id, logo_added, orange_dark, orange_p
     c.setLineWidth(0.5)
     c.line(2*cm, height - 1.5*cm, width - 2*cm, height - 1.5*cm)
 
+# ===== KEEP THE REST OF YOUR FUNCTIONS UNCHANGED =====
 def send_contract_email(application, pdf_path):
     """Send contract PDF via email - ORANGE THEME"""
     from flask_mail import Message
