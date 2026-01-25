@@ -249,7 +249,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     if y < 10*cm:
         c.showPage()
         # Add logo to new page header
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -279,7 +279,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 3: LOAN SUMMARY =====
     if y < 15*cm:
         c.showPage()
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -358,7 +358,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 4: DISBURSEMENT OF FUNDS =====
     if y < 10*cm:
         c.showPage()
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -411,7 +411,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 6: DEFAULT, ENFORCEMENT AND LEGAL COSTS =====
     if y < 10*cm:
         c.showPage()
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -460,7 +460,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 8: REPAYMENT BANKING DETAILS =====
     if y < 8*cm:
         c.showPage()
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -506,7 +506,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 9: ELECTRONIC SIGNATURE & ACCEPTANCE =====
     if y < 10*cm:
         c.showPage()
-        draw_page_header(c, width, height, application.id, logo_added)
+        draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
     c.setFont("Helvetica-Bold", 14)
@@ -604,8 +604,8 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     return pdf_path
 
-def draw_page_header(c, width, height, app_id, logo_added):
-    """Draw header on subsequent pages"""
+def draw_page_header(c, width, height, app_id, logo_added, orange_dark, orange_primary):
+    """Draw header on subsequent pages - FIXED VERSION"""
     # Light orange header for subsequent pages
     c.setFillColor(HexColor('#FFF3E0'))
     c.rect(0, height - 1.5*cm, width, 1.5*cm, fill=1, stroke=0)
@@ -613,6 +613,8 @@ def draw_page_header(c, width, height, app_id, logo_added):
     # Add small logo if available
     if logo_added:
         try:
+            from flask import current_app
+            import os
             logo_paths = [
                 os.path.join(current_app.root_path, 'static', 'images', 'logo.png'),
                 os.path.join(current_app.root_path, 'static', 'images', 'logo.jpg'),
@@ -628,12 +630,12 @@ def draw_page_header(c, width, height, app_id, logo_added):
             pass
     
     # Page header text
-    c.setFillColor(ORANGE_DARK)
+    c.setFillColor(orange_dark)
     c.setFont("Helvetica-Bold", 10)
     c.drawString(4*cm, height - 1.1*cm, f"Loan Agreement - AEF-{app_id}")
     
     # Separator line
-    c.setStrokeColor(ORANGE_PRIMARY)
+    c.setStrokeColor(orange_primary)
     c.setLineWidth(0.5)
     c.line(2*cm, height - 1.5*cm, width - 2*cm, height - 1.5*cm)
 
