@@ -2,105 +2,229 @@
 <html>
 <head>
     <meta charset="utf-8">
-
+    
+    <!-- IMPORTANT: Add title for PDF metadata -->
+    <title>Loan Agreement - {{ application.full_name }} - {{ application.id }}</title>
+    
     <style>
-        @page {
-            margin: 2cm;
+        /* ============ RESET & BASE ============ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Helvetica", "Arial", sans-serif;
             font-size: 12px;
             line-height: 1.6;
             color: #222;
+            margin: 2cm; /* PDF margin */
+            position: relative;
         }
-
-        h1, h2 {
+        
+        /* ============ HEADINGS ============ */
+        h1 {
             text-align: center;
-            margin-bottom: 6px;
+            font-size: 24px;
+            margin: 25px 0 10px 0;
+            color: #1a365d;
+            font-weight: bold;
         }
-
+        
+        h2 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #4a5568;
+            font-weight: normal;
+        }
+        
         h3 {
-            margin-top: 25px;
-            margin-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 12px;
             font-size: 14px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 4px;
+            border-bottom: 2px solid #2d3748;
+            padding-bottom: 6px;
+            color: #2d3748;
+            font-weight: bold;
         }
-
+        
+        /* ============ UTILITY CLASSES ============ */
         .small {
             font-size: 10px;
-            color: #555;
+            color: #666;
+            line-height: 1.4;
         }
-
-        /* LETTERHEAD */
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        /* ============ LETTERHEAD ============ */
         .letterhead {
             width: 100%;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #1a365d;
+            padding-bottom: 15px;
         }
-
-        .letterhead td {
+        
+        .letterhead-container {
+            display: table;
+            width: 100%;
+        }
+        
+        .logo-container {
+            display: table-cell;
             vertical-align: top;
+            width: 40%;
         }
-
-        .logo {
-            height: 60px;
-        }
-
+        
         .company-info {
+            display: table-cell;
+            vertical-align: top;
+            width: 60%;
             text-align: right;
             font-size: 11px;
+            line-height: 1.4;
         }
-
-        .contract-content {
-            position: relative;
-            z-index: 1;
+        
+        .logo {
+            height: 70px;
+            max-width: 200px;
+            display: block;
         }
-
-        /* SIGNED WATERMARK */
+        
+        /* ============ WATERMARK ============ */
         .watermark {
-            position: fixed;
-            top: 35%;
+            position: absolute;
+            top: 40%;
             left: 10%;
             width: 80%;
             text-align: center;
-            transform: rotate(-30deg);
-            font-size: 90px;
-            color: rgba(0, 0, 0, 0.08);
+            transform: rotate(-35deg);
+            font-size: 80px;
+            color: rgba(0, 100, 0, 0.15); /* Green tint for signed */
             font-weight: bold;
-            z-index: 0;
+            z-index: -1;
+            opacity: 0.8;
             pointer-events: none;
+            font-family: "Helvetica", sans-serif;
         }
-
-        table {
+        
+        /* ============ TABLES ============ */
+        table.details {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin: 12px 0 25px 0;
         }
-
-        table td {
-            padding: 6px;
+        
+        table.details tr {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        table.details tr:last-child {
+            border-bottom: 2px solid #cbd5e0;
+        }
+        
+        table.details td {
+            padding: 10px 8px;
             vertical-align: top;
         }
-
-        table tr:nth-child(even) {
-            background-color: #f4f4f4;
+        
+        table.details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #2d3748;
         }
-
-        .meta {
+        
+        table.details tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        /* ============ CONTENT CONTAINER ============ */
+        .contract-content {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+        
+        /* ============ LISTS ============ */
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+        
+        /* ============ SIGNATURE SECTION ============ */
+        .signature-section {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #2d3748;
+        }
+        
+        .signature-block {
+            margin: 25px 0;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-left: 4px solid #38a169;
+        }
+        
+        .signature-details {
             margin-top: 10px;
-            font-size: 11px;
+            padding: 10px;
+            background-color: #edf2f7;
+            border-radius: 4px;
+        }
+        
+        /* ============ FOOTER ============ */
+        .footer {
+            margin-top: 60px;
+            padding-top: 15px;
+            border-top: 1px solid #cbd5e0;
+            font-size: 10px;
+            color: #718096;
             text-align: center;
         }
-
-        .signature-block {
-            margin-top: 30px;
+        
+        /* ============ PRINT SPECIFIC ============ */
+        @media print {
+            body {
+                margin: 1.5cm;
+            }
+            
+            .watermark {
+                opacity: 0.9;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
         }
-
-        .signature-line {
-            margin-top: 20px;
-            border-top: 1px solid #333;
-            width: 300px;
+        
+        /* ============ AMOUNT HIGHLIGHTS ============ */
+        .amount-highlight {
+            font-weight: bold;
+            color: #2d3748;
+            background-color: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .important-note {
+            background-color: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -110,130 +234,181 @@
 <!-- WATERMARK -->
 <div class="watermark">
     SIGNED<br>
-    {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
-    IP: {{ application.signed_ip }}
+    <span style="font-size: 30px; margin-top: 10px; display: block;">
+        {{ application.date_signed.strftime('%d %B %Y') }}<br>
+        {{ application.date_signed.strftime('%H:%M') }} | IP: {{ application.signed_ip }}
+    </span>
 </div>
 
 <div class="contract-content">
 
 <!-- LETTERHEAD -->
-<table class="letterhead">
+<div class="letterhead">
+    <div class="letterhead-container">
+        <div class="logo-container">
+            {% if logo_base64 %}
+            <!-- Option 1: Base64 encoded logo (BEST for PDF) -->
+            <img src="data:image/png;base64,{{ logo_base64 }}" class="logo" alt="Alien Emergency Fund Logo">
+            {% else %}
+            <!-- Option 2: Absolute path or public URL -->
+            <img src="file:///path/to/your/logo.png" class="logo" alt="Alien Emergency Fund Logo">
+            <!-- OR -->
+            <!-- <img src="https://yourdomain.com/static/images/logo.png" class="logo"> -->
+            {% endif %}
+        </div>
+        <div class="company-info">
+            <strong style="font-size: 14px; color: #1a365d;">Alien Emergency Fund (Pty) Ltd</strong><br>
+            <span style="color: #e53e3e; font-weight: bold;">NCR Registration: NCRCP12345</span><br>
+            123 Main Road, Elliotdale, Eastern Cape<br>
+            South Africa, 5070<br>
+            Tel: 043 123 4567 | Email: alienemergencyfund@gmail.com<br>
+            <small style="color: #718096;">Reg No: 2023/123456/07</small>
+        </div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<h1>LOAN AGREEMENT</h1>
+<h2>in terms of the National Credit Act 34 of 2005</h2>
+
+<div class="text-center small" style="margin-bottom: 25px;">
+    <strong>Agreement Number:</strong> AEF-{{ application.id }}-{{ application.date_signed.strftime('%Y') }} |
+    <strong>Date Issued:</strong> {{ application.date_signed.strftime('%d %B %Y') }}
+</div>
+
+<!-- SECTION 1 -->
+<h3>1. CONSUMER DETAILS</h3>
+<table class="details">
+    <tr><td>Full Name</td><td>{{ application.full_name }}</td></tr>
+    <tr><td>ID Number</td><td>{{ application.id_number }}</td></tr>
+    <tr><td>Email Address</td><td>{{ application.email }}</td></tr>
+    <tr><td>Contact Number</td><td>{{ application.phone }}</td></tr>
+    <tr><td>Residential Address</td><td>{{ application.full_address }}</td></tr>
+    <tr><td>Employment</td><td>{{ application.employer }} ({{ application.job_title or 'Not specified' }})</td></tr>
+</table>
+
+<!-- SECTION 2 -->
+<h3>2. CREDIT PROVIDER DISCLOSURE</h3>
+<p>
+    <strong>Alien Emergency Fund (Pty) Ltd</strong> (Registration Number: 2023/123456/07) is a registered credit provider 
+    in terms of the National Credit Act 34 of 2005 (NCRCP12345) and conducts its business in accordance with all 
+    applicable South African legislation, including the Consumer Protection Act 68 of 2008 and the Protection of 
+    Personal Information Act 4 of 2013.
+</p>
+
+<!-- SECTION 3 -->
+<h3>3. LOAN SUMMARY</h3>
+<div class="important-note">
+    This agreement constitutes a short-term credit transaction with a maximum repayment period of six (6) months, 
+    as regulated by the National Credit Act.
+</div>
+
+<table class="details">
+    <tr><td>Principal Loan Amount</td><td><span class="amount-highlight">R{{ '%.2f' % application.loan_amount }}</span></td></tr>
     <tr>
+        <td>Interest Rate</td>
         <td>
-            <img src="{{ request.url_root }}static/images/logo.png" class="logo">
-        </td>
-        <td class="company-info">
-            <strong>Alien Emergency Fund (Pty) Ltd</strong><br>
-            NCR Registration: NCRCP12345<br>
-            123 Main Road, Elliotdale<br>
-            South Africa<br>
-            Email: alienemergencyfund@gmail.com
+            <strong>{{ (application.interest_rate * 100)|round(2) }}% per month</strong><br>
+            <span class="small">(short-term credit as defined by the National Credit Act, Regulation 42)</span>
         </td>
     </tr>
-</table>
-
-<h1>Loan Agreement</h1>
-<h2>National Credit Act 34 of 2005</h2>
-
-<div class="meta">
-    Agreement Number: {{ application.id }} |
-    Date Issued: {{ application.date_signed.strftime('%d %B %Y') }}
-</div>
-
-<h3>1. Consumer Details</h3>
-<table>
-    <tr><td><strong>Full Name</strong></td><td>{{ application.full_name }}</td></tr>
-    <tr><td><strong>ID Number</strong></td><td>{{ application.id_number }}</td></tr>
-    <tr><td><strong>Email Address</strong></td><td>{{ application.email }}</td></tr>
-    <tr><td><strong>Contact Number</strong></td><td>{{ application.phone }}</td></tr>
-    <tr><td><strong>Residential Address</strong></td><td>{{ application.full_address }}</td></tr>
-</table>
-
-<h3>2. Credit Provider Disclosure</h3>
-<p>
-Alien Emergency Fund (Pty) Ltd is a registered credit provider in terms of the
-National Credit Act 34 of 2005 and conducts its business in accordance with all
-applicable South African legislation.
-</p>
-
-<h3>3. Loan Summary</h3>
-<p class="small">
-  This agreement constitutes a short-term credit transaction with a maximum
-  repayment period of six (6) months, as regulated by the National Credit Act.
-</p>
-<table>
-    <tr><td><strong>Principal Loan Amount</strong></td><td>R{{ '%.2f' % application.loan_amount }}</td></tr>
+    <tr><td>Loan Term</td><td>{{ application.loan_term }} months</td></tr>
     <tr>
-      <td><strong>Interest Rate</strong></td>
-      <td>
-        {{ (application.interest_rate * 100)|round(2) }}% per month
-        <span class="small">(short-term credit as defined by the National Credit Act)</span>
-      </td>
+        <td>Total Amount Payable</td>
+        <td><span class="amount-highlight" style="background-color: #feebc8;">R{{ '%.2f' % total_payment }}</span></td>
     </tr>
-    <tr><td><strong>Loan Term</strong></td><td>{{ application.loan_term }} months</td></tr>
-    <tr><td><strong>Total Amount Payable</strong></td><td>R{{ '%.2f' % total_payment }}</td></tr>
-    <tr><td><strong>Monthly Instalment</strong></td><td>R{{ '%.2f' % monthly_payment }}</td></tr>
+    <tr>
+        <td>Monthly Instalment</td>
+        <td><span class="amount-highlight">R{{ '%.2f' % monthly_payment }}</span> ({{ application.loan_term }} payments)</td>
+    </tr>
+    <tr>
+        <td>Total Interest Payable</td>
+        <td>R{{ '%.2f' % (total_payment - application.loan_amount) }}</td>
+    </tr>
 </table>
 
-<p class="small">
-  Interest is calculated monthly on the principal loan amount at the agreed
-  rate for the full loan term. The total repayment amount shown above represents
-  the full cost of credit excluding any default charges.
-</p>
-
-<h3>4. Disbursement of Funds</h3>
-<p>
-Loan proceeds will be paid into the Consumer’s nominated bank account following
-successful verification and acceptance of this agreement. Disbursement occurs
-within 1–2 business days.
-</p>
-
-<h3>5. Consumer Rights</h3>
-<ul>
-    <li>Right to receive a copy of this agreement</li>
-    <li>Right to early settlement without penalty</li>
-    <li>Right to request statements of account</li>
-    <li>Right to apply for debt review</li>
-</ul>
-
-<h3>6. Default, Enforcement and Legal Costs</h3>
-<p>
-Failure to make payment on the due date may result in interest, collection costs,
-legal action, and adverse credit bureau listings, in accordance with the National
-Credit Act.
-</p>
-
-<h3>7. Protection of Personal Information (POPIA)</h3>
-<p>
-All personal information is processed lawfully, securely, and transparently in
-accordance with the Protection of Personal Information Act. Information is used
-solely for credit assessment, administration, and statutory reporting.
-</p>
-
-<h3>8. Repayment Banking Details</h3>
-<ul>
-    <li><strong>Bank Name:</strong> ________________________</li>
-    <li><strong>Account Holder:</strong> ________________________</li>
-    <li><strong>Account Number:</strong> ________________________</li>
-    <li><strong>Branch Code:</strong> ________________________</li>
-    <li><strong>Reference:</strong> Application ID {{ application.id }}</li>
-</ul>
-
-<h3>9. Electronic Signature & Acceptance</h3>
-<p>
-By electronically accepting this agreement, the Consumer acknowledges that this
-constitutes a legally binding electronic signature in terms of the Electronic
-Communications and Transactions Act 25 of 2002.
-</p>
-
-<div class="signature-block">
-    <strong>Signed by Consumer</strong><br>
-    Date: {{ application.date_signed.strftime('%d %B %Y %H:%M') }}<br>
-    IP Address: {{ application.signed_ip }}
+<div class="small">
+    <strong>Interest Calculation:</strong> Interest is calculated monthly on the principal loan amount at the agreed 
+    rate for the full loan term. The total repayment amount shown above represents the full cost of credit excluding 
+    any default charges.
 </div>
 
-<div class="small" style="margin-top:30px; text-align:center;">
-    Alien Emergency Fund (Pty) Ltd • NCR Registered • POPIA Compliant
+<!-- SECTION 4-9 (Condensed for brevity, but expand similarly) -->
+<h3>4. DISBURSEMENT OF FUNDS</h3>
+<p>
+    Loan proceeds will be paid into the Consumer's nominated bank account following successful verification and 
+    acceptance of this agreement. Disbursement occurs within 1–2 business days of approval.
+</p>
+
+<h3>5. CONSUMER RIGHTS</h3>
+<ul>
+    <li>Right to receive a copy of this agreement free of charge</li>
+    <li>Right to early settlement without penalty (National Credit Act, Section 125)</li>
+    <li>Right to request statements of account at any time</li>
+    <li>Right to apply for debt review if over-indebted</li>
+    <li>Right to lodge complaints with the National Credit Regulator (NCR)</li>
+</ul>
+
+<h3>6. DEFAULT, ENFORCEMENT AND LEGAL COSTS</h3>
+<p>
+    Failure to make payment on the due date may result in interest, collection costs, legal action, and adverse 
+    credit bureau listings, in accordance with the National Credit Act. Legal costs will be on an attorney-client scale.
+</p>
+
+<h3>7. PROTECTION OF PERSONAL INFORMATION (POPIA)</h3>
+<p>
+    All personal information is processed lawfully, securely, and transparently in accordance with the Protection 
+    of Personal Information Act 4 of 2013. Information is used solely for credit assessment, administration, 
+    statutory reporting, and as required by law.
+</p>
+
+<h3>8. REPAYMENT BANKING DETAILS</h3>
+<table class="details">
+    <tr><td>Bank Name</td><td>_______________________________</td></tr>
+    <tr><td>Account Holder</td><td>_______________________________</td></tr>
+    <tr><td>Account Number</td><td>_______________________________</td></tr>
+    <tr><td>Branch Code</td><td>_______________________________</td></tr>
+    <tr><td style="color: #e53e3e;">Reference</td><td style="color: #e53e3e; font-weight: bold;">AEF-{{ application.id }}</td></tr>
+</table>
+
+<h3>9. ELECTRONIC SIGNATURE & ACCEPTANCE</h3>
+<p>
+    By electronically accepting this agreement, the Consumer acknowledges that this constitutes a legally binding 
+    electronic signature in terms of the Electronic Communications and Transactions Act 25 of 2002.
+</p>
+
+<!-- SIGNATURE SECTION -->
+<div class="signature-section">
+    <div class="signature-block">
+        <strong style="font-size: 13px; color: #2d3748;">SIGNED BY CONSUMER</strong>
+        <div class="signature-details">
+            <table style="width: 100%;">
+                <tr>
+                    <td><strong>Full Name:</strong></td>
+                    <td>{{ application.full_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Date & Time:</strong></td>
+                    <td>{{ application.date_signed.strftime('%d %B %Y at %H:%M') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>IP Address:</strong></td>
+                    <td>{{ application.signed_ip }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Document ID:</strong></td>
+                    <td>AEF-{{ application.id }}-SIGNED</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <strong>Alien Emergency Fund (Pty) Ltd</strong> • NCR Registered Credit Provider (NCRCP12345) • POPIA Compliant<br>
+    This document is electronically generated and requires no physical signature. A copy has been emailed to {{ application.email }}<br>
+    <small>Generated on {{ now.strftime('%Y-%m-%d %H:%M:%S') if now else application.date_signed.strftime('%Y-%m-%d %H:%M:%S') }}</small>
 </div>
 
 </div>
