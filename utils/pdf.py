@@ -44,36 +44,37 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     ORANGE_DARK = HexColor('#E67E22')  # Darker orange
     ORANGE_BRIGHT = HexColor('#FF6B00')  # Bright orange
     
-    # Track pages for watermark placement
-    page_count = [0]  # Use list to maintain reference across functions
+    # Track current page for watermark
+    current_page = 0
     
     # ===== HELPER FUNCTION TO ADD WATERMARK =====
-    def add_watermark(page_num, total_pages):
-        """Add watermark to all pages except the last one"""
-        if page_num < total_pages:  # All pages except last
-            c.saveState()
-            c.setFont("Helvetica-Bold", 80)
-            c.setFillColor(HexColor('#FFE5CC'))  # Very light orange
-            c.translate(width/2, height/2)
-            c.rotate(-35)  # Rotated watermark
-            
-            # Watermark text
-            c.drawCentredString(0, 0, "SIGNED")
-            
-            # Date and IP below
-            c.setFont("Helvetica", 24)
-            date_text = application.date_signed.strftime('%d %B %Y')
-            c.drawCentredString(0, -2*cm, date_text)
-            
-            c.setFont("Helvetica", 18)
-            ip_text = f"IP: {application.signed_ip}"
-            c.drawCentredString(0, -3.5*cm, ip_text)
-            
-            c.restoreState()
+    def add_current_page_watermark():
+        """Add watermark to the current page"""
+        c.saveState()
+        c.setFont("Helvetica-Bold", 80)
+        c.setFillColor(HexColor('#FFE5CC'))  # Very light orange
+        c.translate(width/2, height/2)
+        c.rotate(-35)  # Rotated watermark
+        
+        # Watermark text
+        c.drawCentredString(0, 0, "SIGNED")
+        
+        # Date and IP below
+        c.setFont("Helvetica", 24)
+        date_text = application.date_signed.strftime('%d %B %Y')
+        c.drawCentredString(0, -2*cm, date_text)
+        
+        c.setFont("Helvetica", 18)
+        ip_text = f"IP: {application.signed_ip}"
+        c.drawCentredString(0, -3.5*cm, ip_text)
+        
+        c.restoreState()
     
     # ===== LETTERHEAD WITH LOGO (FIRST PAGE) =====
-    # Add watermark for first page (will be incremented later)
-    page_count[0] += 1
+    current_page += 1
+    
+    # Add watermark for first page (before other content)
+    add_current_page_watermark()
     
     # Orange header bar
     c.setFillColor(ORANGE_PRIMARY)
@@ -255,7 +256,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 2: CREDIT PROVIDER DISCLOSURE =====
     if y < 10*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -286,7 +289,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 3: LOAN SUMMARY =====
     if y < 15*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -374,7 +379,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 4: DISBURSEMENT OF FUNDS =====
     if y < 10*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -428,7 +435,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 6: DEFAULT, ENFORCEMENT AND LEGAL COSTS =====
     if y < 10*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -478,7 +487,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 8: REPAYMENT BANKING DETAILS =====
     if y < 8*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -525,7 +536,9 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     # ===== SECTION 9: ELECTRONIC SIGNATURE & ACCEPTANCE =====
     if y < 10*cm:
         c.showPage()
-        page_count[0] += 1
+        current_page += 1
+        # Add watermark to new page before header (this will be the last page with watermark)
+        add_current_page_watermark()
         draw_page_header(c, width, height, application.id, logo_added, ORANGE_DARK, ORANGE_PRIMARY)
         y = height - 3*cm
     
@@ -611,15 +624,8 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     for i, line in enumerate(footer_lines):
         c.drawCentredString(width/2, footer_y - (i * 0.4*cm), line)
     
-    # ===== FINALIZE PDF =====
-    # Get total pages (add 1 for the current page we're about to finish)
-    total_pages = page_count[0]
-    
-    # Add watermark to all pages except last
-    for page_num in range(1, total_pages + 1):
-        c.setPage(page_num - 1)  # ReportLab pages are 0-indexed
-        add_watermark(page_num, total_pages)
-    
+    # ===== FINALIZE PDF (NO WATERMARK ON LAST PAGE) =====
+    # DO NOT add watermark to the last page
     c.showPage()
     c.save()
     
@@ -629,7 +635,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     file_size = os.path.getsize(pdf_path)
     print(f"✅ PDF successfully generated: {pdf_path} ({file_size} bytes)")
-    print(f"📄 Total pages: {total_pages}")
+    print(f"📄 Total pages with watermark: {current_page}")
     
     return pdf_path
 
