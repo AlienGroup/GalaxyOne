@@ -925,6 +925,12 @@ def mark_in_arrears(finance_id):
     flash('Loan marked as in arrears.', 'warning')
     return redirect(url_for('admin.finance_dashboard'))
 
+@main.route('/google9137ca76830f8834.html')
+def google_verification():
+    return send_from_directory(
+        current_app.root_path,
+        'google9137ca76830f8834.html'
+    )
 
 
 
