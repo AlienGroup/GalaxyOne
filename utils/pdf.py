@@ -286,7 +286,7 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     y -= 0.5*cm
     
-    # ===== SECTION 3: LOAN SUMMARY =====
+        # ===== SECTION 3: LOAN SUMMARY =====
     if y < 15*cm:
         c.showPage()
         current_page += 1
@@ -303,8 +303,8 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     
     y -= 0.8*cm
     
-    # Important note box - FIXED: Adjusted width to prevent text cutoff
-    note_box_height = 1.2*cm  # Increased height for better fit
+    # Important note box - FIXED: Adjusted height and position
+    note_box_height = 1.4*cm  # Increased height for better spacing
     note_box_width = width - 4*cm
     c.setFillColor(HexColor('#FFF3E0'))  # Light orange background
     c.setStrokeColor(ORANGE_DARK)
@@ -318,10 +318,11 @@ def generate_contract_pdf(application, monthly_payment, total_payment):
     note_text_line1 = "⚠️ This agreement constitutes a short-term credit transaction"
     note_text_line2 = "with a maximum repayment period of six (6) months"
     
-    c.drawString(2.5*cm, y - 0.7*cm, note_text_line1)
-    c.drawString(2.5*cm, y - 1.2*cm, note_text_line2)
+    # Adjusted vertical positioning within the box
+    c.drawString(2.5*cm, y - 0.8*cm, note_text_line1)
+    c.drawString(2.5*cm, y - 1.3*cm, note_text_line2)
     
-    y -= note_box_height + 0.3*cm  # Adjusted spacing
+    y -= note_box_height + 0.5*cm  # Added more spacing after box
     
     # Calculate values
     total_interest = total_payment - loan_amount
